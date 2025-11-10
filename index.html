@@ -81,8 +81,8 @@
                 <div class="flex flex-col h-full">
                     <!-- Sidebar Header -->
                     <div class="flex items-center justify-center h-20 border-b border-gray-200">
-                        <span class="text-2xl font-bold text-blue-600">FIT</span>
-                        <span class="text-2xl font-bold text-gray-700">FC</span>
+                        <span class="text-2xl font-bold text-blue-600">Tim</span>
+                        <span class="text-2xl font-bold text-gray-700">Keuangan</span>
                     </div>
                     
                     <!-- Nav Links -->
@@ -175,6 +175,33 @@
                                 </div>
                             </div>
                         </div>
+
+                        <!-- ===== Transaksi Terbaru (Tabel) ===== -->
+                        <div class="mt-8 bg-white rounded-lg shadow-lg overflow-hidden">
+                            <h3 class="px-6 py-4 text-lg font-semibold text-gray-800 border-b border-gray-200">Transaksi Terbaru</h3>
+                            <!-- Wrapper untuk scrolling di mobile -->
+                            <div class="overflow-x-auto">
+                                <table class="min-w-full divide-y divide-gray-200">
+                                    <thead class="bg-gray-50">
+                                        <tr>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tanggal/Jam</th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama</th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nominal Bayar</th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Jenis Pembayaran</th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status Admin</th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Keterangan</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="dashboard-recent-tx-list" class="bg-white divide-y divide-gray-200">
+                                        <!-- Data akan di-render oleh JS -->
+                                        <tr>
+                                            <td colspan="6" class="px-6 py-4 text-center text-sm text-gray-400">Memuat data...</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <!-- ===== End Transaksi Terbaru ===== -->
 
                     </div> <!-- End Dashboard View -->
 
@@ -537,6 +564,7 @@
                 updateDashboard(allTransactions);
                 renderHistoryList(allTransactions);
                 updateRecentActivity(allTransactions);
+                renderDashboardTable(allTransactions); // <-- PANGGIL FUNGSI BARU
 
             }, (error) => {
                 console.error("Error mendapatkan data Firestore:", error);
@@ -754,6 +782,55 @@
                     </div>
                 `;
                 list.appendChild(itemEl);
+            });
+        }
+
+        // Render tabel di Dashboard
+        function renderDashboardTable(data) {
+            const list = document.getElementById('dashboard-recent-tx-list');
+            list.innerHTML = ''; // Kosongkan list
+
+            if (data.length === 0) {
+                list.innerHTML = '<tr><td colspan="6" class="px-6 py-4 text-center text-sm text-gray-400">Belum ada transaksi.</td></tr>';
+                return;
+            }
+
+            // Ambil 5 data terbaru (data sudah diurutkan)
+            const recentData = data.slice(0, 5);
+            
+            // Style untuk jenis pembayaran
+            const paymentTypeStyles = {
+                qris: 'bg-blue-100 text-blue-800',
+                transfer: 'bg-green-100 text-green-800',
+                tunai: 'bg-yellow-100 text-yellow-800'
+            };
+
+            recentData.forEach(item => {
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-gray-50";
+                
+                // Format Tanggal/Jam
+                const lastUpdate = item.lastUpdatedAt && item.lastUpdatedAt.toDate ? item.lastUpdatedAt.toDate().toLocaleString('id-ID', { dateStyle: 'short', timeStyle: 'short' }) : 'N/A';
+                // Nama Admin
+                const adminName = item.lastUpdatedByAdminName || 'Admin';
+                // Keterangan
+                const notes = item.notes || '-';
+                // Style Jenis Pembayaran
+                const paymentStyle = paymentTypeStyles[item.paymentType] || 'bg-gray-100 text-gray-800';
+                
+                tr.innerHTML = `
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">${lastUpdate.replace(',', ' - ')}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${item.playerName || 'N/A'}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">${formatCurrency(item.amount)}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm">
+                        <span class="px-2 py-0.5 text-xs font-medium rounded-full ${paymentStyle}">
+                            ${item.paymentType || 'N/A'}
+                        </span>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">${adminName}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 truncate max-w-xs" title="${notes}">${notes}</td>
+                `;
+                list.appendChild(tr);
             });
         }
 
