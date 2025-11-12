@@ -3,181 +3,183 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Manajemen Keuangan Tim</title>
-    <!-- 1. Muat Tailwind CSS -->
+    <title>Aplikasi Keuangan Tim</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- 2. Muat ikon (Heroicons) -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
-    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        /* Menggunakan font Inter dari Tailwind */
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-        html, body {
+        body {
             font-family: 'Inter', sans-serif;
-            scroll-behavior: smooth;
         }
-        /* Style untuk sidebar transition */
-        #sidebar {
-            transition: transform 0.3s ease-in-out;
-        }
-        /* Custom scrollbar (opsional) */
+        /* Custom scrollbar */
         ::-webkit-scrollbar {
-            width: 6px;
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
         }
         ::-webkit-scrollbar-thumb {
-            background: #cbd5e1;
+            background: #c1c1c1;
             border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #a1a1a1;
+        }
+        /* Sembunyikan panah di input number */
+        input[type='number']::-webkit-outer-spin-button,
+        input[type='number']::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        input[type='number'] {
+            -moz-appearance: textfield;
         }
     </style>
 </head>
 <body class="bg-gray-100">
 
-    <!-- 
-      Struktur Aplikasi:
-      1. Login Overlay (#login-overlay) - Tampil jika belum login
-      2. Main App (#app-container) - Tampil setelah login
-         - Sidebar (#sidebar)
-         - Header (Mobile) (#header)
-         - Main Content (#main-content)
-            - Dashboard View (#view-dashboard)
-            - History View (#view-history)
-      3. Modals
-         - Add Transaction Modal (#modal-add-transaction)
-    -->
-
-    <!-- ===== 1. LOGIN OVERLAY ===== -->
+    <!-- Login Overlay -->
     <div id="login-overlay" class="fixed inset-0 z-50 flex items-center justify-center bg-gray-900 bg-opacity-75 backdrop-blur-sm">
-        <div class="w-full max-w-md p-8 bg-white rounded-lg shadow-xl">
-            <h2 class="text-3xl font-bold text-center text-gray-800">Login Admin</h2>
-            <p class="mt-2 text-center text-gray-500">Gunakan akun admin Anda untuk masuk.</p>
-            
+        <div class="w-full max-w-sm p-8 bg-white rounded-lg shadow-xl">
+            <h2 class="text-3xl font-bold text-center text-gray-900">Login Admin</h2>
+            <p class="mt-2 text-center text-sm text-gray-600">Gunakan akun admin Anda untuk masuk.</p>
             <form id="login-form" class="mt-8 space-y-6">
                 <div>
-                    <label for="login-email" class="block text-sm font-medium text-gray-700">Email</label>
-                    <input id="login-email" type="email" required class="w-full px-4 py-3 mt-1 text-gray-900 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="admin@timbola.com">
+                    <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+                    <input id="email" name="email" type="email" autocomplete="email" required
+                        class="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                        placeholder="admin@gmail.com">
                 </div>
                 <div>
-                    <label for="login-password" class="block text-sm font-medium text-gray-700">Password</label>
-                    <input id="login-password" type="password" required class="w-full px-4 py-3 mt-1 text-gray-900 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="••••••••">
+                    <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+                    <input id="password" name="password" type="password" autocomplete="current-password" required
+                        class="mt-1 block w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                        placeholder="••••••••">
                 </div>
-                <div id="login-error" class="hidden text-sm text-center text-red-600"></div>
-                <button type="submit" class="w-full px-6 py-3 font-semibold text-white bg-blue-600 rounded-lg shadow-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-300">
-                    Masuk
-                </button>
+                
+                <p id="login-error" class="text-sm text-center text-red-600 font-medium hidden"></p>
+                
+                <div>
+                    <button type="submit" id="login-button"
+                        class="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-150 ease-in-out">
+                        Masuk
+                    </button>
+                </div>
+                <p class="mt-4 text-xs text-center text-gray-500">Aplikasi ini terhubung ke Firebase untuk autentikasi dan database.</p>
             </form>
-            <p class="mt-4 text-xs text-center text-gray-400">
-                Aplikasi ini terhubung ke Firebase untuk autentikasi dan database.
-            </p>
         </div>
     </div>
 
-
-    <!-- ===== 2. MAIN APP CONTAINER (Hidden by default) ===== -->
-    <div id="app-container" class="hidden">
-        <div class="flex h-screen overflow-hidden">
-
-            <!-- SIDEBAR (Mobile hidden, Desktop visible) -->
-            <aside id="sidebar" class="fixed inset-y-0 left-0 z-30 flex-shrink-0 w-64 bg-white shadow-lg md:static md:block transform -translate-x-full md:translate-x-0">
-                <div class="flex flex-col h-full">
-                    <!-- Sidebar Header -->
-                    <div class="flex items-center justify-center h-20 border-b border-gray-200">
-                        <span class="text-2xl font-bold text-blue-600">Tim</span>
-                        <span class="text-2xl font-bold text-gray-700">Keuangan</span>
-                    </div>
-                    
-                    <!-- Nav Links -->
-                    <nav class="flex-1 mt-6 overflow-y-auto">
-                        <a href="#" class="nav-link active" data-view="dashboard">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1V10M9 9h6m-6 0a1 1 0 001 1h4a1 1 0 001-1v-3a1 1 0 00-1-1H9a1 1 0 00-1 1v3z"></path></svg>
-                            <span>Dashboard</span>
-                        </a>
-                        <a href="#" class="nav-link" data-view="history">
-                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                            <span>Riwayat Transaksi</span>
-                        </a>
-                    </nav>
-
-                    <!-- Sidebar Footer (Admin Info) -->
-                    <div class="p-4 border-t border-gray-200">
-                        <p class="text-sm font-medium text-gray-700">Login sebagai:</p>
-                        <p id="admin-name-display" class="text-sm font-semibold text-gray-800 truncate" title="Nama Admin">Memuat...</p>
-                        <p id="admin-email-display" class="text-xs text-gray-500 truncate" title="Email Admin"></p> <!-- TAMBAHAN BARIS INI -->
-                        <button id="logout-button" class="w-full px-4 py-2 mt-3 text-sm font-medium text-red-600 bg-red-100 rounded-lg hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-red-500">
-                            Keluar
-                        </button>
-                    </div>
-                </div>
-            </aside>
+    <!-- Main App Container (Hidden by default) -->
+    <div id="app-container" class="hidden h-screen flex">
+        
+        <!-- Sidebar -->
+        <aside class="w-64 bg-gray-900 text-gray-300 flex flex-col fixed inset-y-0 left-0 z-30
+                       transform -translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out"
+               id="sidebar">
             
-            <!-- Overlay untuk mobile saat sidebar dibuka -->
-            <div id="sidebar-overlay" class="fixed inset-0 z-20 hidden bg-black bg-opacity-50 md:hidden" ></div>
+            <!-- Logo/Header -->
+            <div class="h-16 flex items-center justify-between px-6 bg-gray-900 border-b border-gray-800">
+                <span class="text-2xl font-bold text-white">TimKeuangan</span>
+                <!-- Tombol Close (Mobile) -->
+                <button id="close-sidebar-btn" class="md:hidden p-1 text-gray-400 hover:text-white rounded-full focus:outline-none focus:ring-2 focus:ring-white">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
 
-            <!-- Main Content Area -->
-            <div class="flex flex-col flex-1 w-0 h-full overflow-hidden">
-                <!-- HEADER (Mobile only) -->
-                <header id="header" class="relative z-10 flex items-center justify-between h-16 bg-white border-b border-gray-200 shadow-sm md:hidden">
-                    <button id="menu-toggle-btn" class="p-4 text-gray-500 focus:outline-none">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
-                    </button>
-                    <span class="text-xl font-bold text-gray-700">Dashboard</span>
-                    <!-- Tombol Add di Header Mobile -->
-                    <button id="add-btn-mobile" class="p-4 text-blue-600 focus:outline-none">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
-                    </button>
-                </header>
+            <!-- Navigasi -->
+            <nav class="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
+                <a href="#" id="nav-dashboard"
+                   class="flex items-center px-4 py-3 rounded-lg text-white bg-gray-700 transition-colors duration-200">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1V10a1 1 0 00-1-1H7a1 1 0 00-1 1v10a1 1 0 001 1h3z"></path></svg>
+                    <span class="ml-3 font-medium">Dashboard</span>
+                </a>
+                <a href="#" id="nav-history"
+                   class="flex items-center px-4 py-3 rounded-lg text-gray-300 hover:bg-gray-700 hover:text-white transition-colors duration-200">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    <span class="ml-3 font-medium">Riwayat Transaksi</span>
+                </a>
+            </nav>
 
-                <!-- MAIN CONTENT (Scrollable) -->
-                <main id="main-content" class="flex-1 overflow-x-hidden overflow-y-auto">
+            <!-- Admin Info & Logout -->
+            <div class="px-4 py-4 border-t border-gray-800">
+                <p class="text-sm">Login sebagai:</p>
+                <p id="admin-name-display" class="text-base font-semibold text-white truncate"></p>
+                <p id="admin-email-display" class="text-xs text-gray-400 truncate"></p>
+                <button id="logout-button"
+                        class="w-full mt-4 px-4 py-2 text-left bg-red-600 hover:bg-red-700 text-white text-sm font-medium rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 focus:ring-offset-gray-900 transition-colors duration-200">
+                    Keluar
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-100 md:ml-64">
+            
+            <!-- Top Bar (Mobile Header) -->
+            <header class="h-16 bg-white shadow-md flex items-center justify-between px-4 md:hidden">
+                <button id="open-sidebar-btn" class="p-1 text-gray-600 hover:text-gray-900 rounded-full focus:outline-none focus:ring-2 focus:ring-gray-400">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+                </button>
+                <span class="text-xl font-bold text-gray-800">TimKeuangan</span>
+                <div class="w-6"></div> <!-- Placeholder -->
+            </header>
+
+            <!-- Page Content Area -->
+            <div class="p-4 md:p-6">
+                <div class="container mx-auto">
                     
                     <!-- ===== Dashboard View ===== -->
-                    <div id="view-dashboard" class="app-view p-4 md:p-8">
-                        <header class="flex items-center justify-between">
-                            <h1 class="text-4xl font-bold text-gray-900">Dashboard</h1>
-                            <!-- Tombol Add di Desktop -->
-                            <button id="add-btn-desktop" class="items-center hidden px-6 py-3 font-semibold text-white bg-blue-600 rounded-lg shadow-lg md:flex hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-300">
-                                <svg class="w-5 h-5 mr-2 -ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
-                                <span>Tambah Pemasukan</span>
+                    <div id="dashboard-view" class="">
+                        <!-- Header -->
+                        <div class="flex flex-col md:flex-row md:items-center justify-between mb-6">
+                            <h1 class="text-3xl font-bold text-gray-900">Dashboard</h1>
+                            <button id="add-transaction-btn-main"
+                                    class="mt-4 md:mt-0 flex items-center px-5 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors duration-200">
+                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+                                Tambah Pemasukan
                             </button>
-                        </header>
+                        </div>
 
-                        <!-- Stat Cards -->
-                        <div class="grid grid-cols-1 gap-5 mt-8 md:grid-cols-2 lg:grid-cols-3">
+                        <!-- Stats Cards -->
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                             <div class="p-6 bg-white rounded-lg shadow-lg">
-                                <p class="text-sm font-medium text-gray-500">Total Pemasukan</p>
-                                <p id="stat-total-income" class="mt-2 text-4xl font-bold text-gray-900">Rp 0</p>
+                                <h4 class="text-sm font-medium text-gray-500">Total Pemasukan</h4>
+                                <p id="total-revenue" class="mt-2 text-3xl font-bold text-gray-900">Rp 0</p>
                             </div>
                             <div class="p-6 bg-white rounded-lg shadow-lg">
-                                <p class="text-sm font-medium text-gray-500">Total Transaksi</p>
-                                <p id="stat-total-transactions" class="mt-2 text-4xl font-bold text-gray-900">0</p>
+                                <h4 class="text-sm font-medium text-gray-500">Total Transaksi</h4>
+                                <p id="total-transactions" class="mt-2 text-3xl font-bold text-gray-900">0</p>
                             </div>
                             <div class="p-6 bg-white rounded-lg shadow-lg">
-                                <p class="text-sm font-medium text-gray-500">Pemain Terbayar</p>
-                                <p id="stat-unique-players" class="mt-2 text-4xl font-bold text-gray-900">0</p>
+                                <h4 class="text-sm font-medium text-gray-500">Pemain Terbayar</h4>
+                                <p id="unique-players" class="mt-2 text-3xl font-bold text-gray-900">0</p>
                             </div>
                         </div>
 
-                        <!-- Charts & Recent Activity -->
-                        <div class="grid grid-cols-1 gap-8 mt-8 lg:grid-cols-3">
+                        <!-- Charts & Activity -->
+                        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
                             <!-- Chart -->
-                            <div class="p-6 bg-white rounded-lg shadow-lg lg:col-span-2">
-                                <h3 class="text-lg font-semibold text-gray-800">Pemasukan per Jenis</h3>
-                                <div class="mt-4" style="height: 300px;">
+                            <div class="lg:col-span-2 p-6 bg-white rounded-lg shadow-lg">
+                                <h3 class="text-lg font-semibold text-gray-800 mb-4">Pemasukan per Jenis</h3>
+                                <div class="h-64 md:h-80">
                                     <canvas id="payment-chart"></canvas>
                                 </div>
                             </div>
                             
                             <!-- Recent Activity -->
                             <div class="p-6 bg-white rounded-lg shadow-lg">
-                                <h3 class="text-lg font-semibold text-gray-800">Aktivitas Admin Terbaru</h3>
-                                <div id="recent-activity-list" class="mt-4 space-y-4 max-h-[300px] overflow-y-auto">
-                                    <!-- Aktivitas akan di-render oleh JS -->
-                                    <p class="text-sm text-gray-400">Belum ada aktivitas.</p>
-                                </div>
+                                <h3 class="text-lg font-semibold text-gray-800 mb-4">Aktivitas Admin Terbaru</h3>
+                                <ul id="recent-activity-list" class="space-y-4 max-h-80 overflow-y-auto">
+                                    <!-- Aktivitas di-render oleh JS -->
+                                    <li class="text-center text-sm text-gray-400">Memuat data...</li>
+                                </ul>
                             </div>
                         </div>
 
                         <!-- ===== Transaksi Terbaru (Tabel) ===== -->
-                        <div class="mt-8 bg-white rounded-lg shadow-lg overflow-hidden">
+                        <div class="mt-6 bg-white rounded-lg shadow-lg overflow-hidden">
                             <h3 class="px-6 py-4 text-lg font-semibold text-gray-800 border-b border-gray-200">Transaksi Terbaru</h3>
                             <!-- Wrapper untuk scrolling di mobile -->
                             <div class="overflow-x-auto">
@@ -190,12 +192,13 @@
                                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Jenis Pembayaran</th>
                                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status Admin</th>
                                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Keterangan</th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
                                         </tr>
                                     </thead>
                                     <tbody id="dashboard-recent-tx-list" class="bg-white divide-y divide-gray-200">
                                         <!-- Data akan di-render oleh JS -->
                                         <tr>
-                                            <td colspan="6" class="px-6 py-4 text-center text-sm text-gray-400">Memuat data...</td>
+                                            <td colspan="7" class="px-6 py-4 text-center text-sm text-gray-400">Memuat data...</td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -206,144 +209,142 @@
                     </div> <!-- End Dashboard View -->
 
                     <!-- ===== History View ===== -->
-                    <div id="view-history" class="app-view p-4 md:p-8 hidden">
-                        <h1 class="text-4xl font-bold text-gray-900">Riwayat Transaksi</h1>
-                        
-                        <!-- Filter/Search Bar -->
-                        <div class="mt-6">
-                            <input id="search-history" type="text" placeholder="Cari nama pemain..." class="w-full px-4 py-3 text-gray-900 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        </div>
+                    <div id="history-view" class="hidden">
+                        <div class="bg-white rounded-lg shadow-lg">
+                            <h3 class="px-6 py-4 text-lg font-semibold text-gray-800 border-b border-gray-200">Riwayat Semua Transaksi</h3>
+                            
+                            <!-- Filter -->
+                            <div class="px-6 py-4">
+                                <input id="history-search" type="text" placeholder="Cari berdasarkan nama pemain..." 
+                                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200">
+                            </div>
 
-                        <!-- Transaction List -->
-                        <div id="history-list-container" class="mt-6 space-y-4">
-                            <!-- Daftar riwayat akan di-render oleh JS -->
-                            <p id="history-loading" class="text-center text-gray-500">Memuat data...</p>
+                            <!-- Wrapper untuk scrolling di mobile -->
+                            <div class="overflow-x-auto">
+                                <table class="min-w-full divide-y divide-gray-200">
+                                    <thead class="bg-gray-50">
+                                        <tr>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tanggal/Jam</th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama</th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nominal Bayar</th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Jenis Pembayaran</th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status Admin</th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Keterangan</th>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="history-list-tbody" class="bg-white divide-y divide-gray-200">
+                                        <!-- Data akan di-render oleh JS -->
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
-
                     </div> <!-- End History View -->
-                
-                </main>
-            </div> <!-- End Main Content Area -->
-        </div>
-    </div> <!-- End App Container -->
 
+                </div>
+            </div>
+        </main>
+    </div>
 
-    <!-- ===== 3. MODAL TAMBAH/EDIT TRANSAKSI ===== -->
-    <div id="modal-add-transaction" class="fixed inset-0 z-40 hidden overflow-y-auto bg-black bg-opacity-50">
-        <div class="flex items-center justify-center min-h-screen px-4">
-            <div class="relative w-full max-w-lg p-6 mx-auto bg-white rounded-lg shadow-xl" id="modal-content">
-                <button id="modal-close-btn" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-                </button>
+    <!-- Transaction Form Modal -->
+    <div id="transaction-modal" class="fixed inset-0 z-40 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm hidden overflow-y-auto p-4">
+        <div class="bg-white rounded-lg shadow-xl w-full max-w-lg m-auto">
+            <form id="transaction-form">
+                <!-- Modal Header -->
+                <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
+                    <h3 id="modal-title" class="text-xl font-bold text-gray-900">Tambah Pemasukan Baru</h3>
+                    <button type="button" id="close-modal-btn-x" class="p-1 text-gray-400 hover:text-gray-700 rounded-full focus:outline-none focus:ring-2 focus:ring-gray-400">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                    </button>
+                </div>
                 
-                <h3 id="modal-title" class="text-2xl font-semibold text-gray-800">Tambah Pemasukan Baru</h3>
-                
-                <form id="transaction-form" class="mt-6 space-y-4">
-                    <!-- Hidden input untuk ID transaksi (saat edit) -->
-                    <input type="hidden" id="transaction-id">
-
+                <!-- Modal Body -->
+                <div class="p-6 space-y-4">
                     <div>
-                        <label for="player-name" class="block text-sm font-medium text-gray-700">Nama Pemain</label>
-                        <input id="player-name" type="text" required class="w-full px-4 py-3 mt-1 text-gray-900 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Contoh: Budi Sudarsono">
+                        <label for="playerName" class="block text-sm font-medium text-gray-700">Nama Pemain</label>
+                        <input type="text" id="playerName" required
+                               class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 sm:text-sm">
                     </div>
-
                     <div>
                         <label for="amount" class="block text-sm font-medium text-gray-700">Nominal Bayar</label>
                         <div class="relative mt-1">
-                            <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-500">Rp</span>
-                            <input id="amount" type="number" required class="w-full px-4 py-3 pl-10 text-gray-900 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="50000">
+                            <span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500 sm:text-sm">Rp</span>
+                            <input type="text" id="amount" inputmode="numeric" required
+                                   class="pl-10 pr-4 py-2 block w-full border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 sm:text-sm">
                         </div>
                     </div>
-
                     <div>
-                        <label for="payment-type" class="block text-sm font-medium text-gray-700">Jenis Pembayaran</label>
-                        <select id="payment-type" required class="w-full px-4 py-3 mt-1 text-gray-900 bg-white border border-gray-300 rounded-lg shadow-sm appearance-none focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <label for="paymentType" class="block text-sm font-medium text-gray-700">Jenis Pembayaran</label>
+                        <select id="paymentType" required
+                                class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 sm:text-sm bg-white">
                             <option value="qris">QRIS</option>
                             <option value="transfer">Transfer Bank</option>
                             <option value="tunai">Tunai</option>
                         </select>
                     </div>
-                    
                     <div>
                         <label for="notes" class="block text-sm font-medium text-gray-700">Keterangan</label>
-                        <textarea id="notes" rows="3" class="w-full px-4 py-3 mt-1 text-gray-900 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Bayar HTM minggu ke-5..."></textarea>
+                        <textarea id="notes" rows="3"
+                                  class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 sm:text-sm resize-none"></textarea>
                     </div>
+                    <p class="text-xs text-gray-500">
+                        Tanggal/Jam: <span id="modal-timestamp"></span><br>
+                        Dicatat oleh Admin: <span id="modal-admin-name"></span>
+                    </p>
+                </div>
 
-                    <!-- Info Tanggal & Admin (Otomatis) -->
-                    <div class="pt-4 border-t border-gray-200">
-                        <p class="text-xs text-gray-500">
-                            <span class="font-medium">Tanggal/Jam:</span> 
-                            <span id="form-timestamp">Akan diisi otomatis</span>
-                        </p>
-                        <p class="text-xs text-gray-500">
-                            <span class="font-medium">Dicatat oleh Admin:</span> 
-                            <span id="form-admin-name">Memuat...</span>
-                        </p>
-                    </div>
-                    
-                    <div class="flex justify-end pt-4 space-x-3">
-                        <button type="button" id="modal-cancel-btn" class="px-6 py-3 font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200">
-                            Batal
-                        </button>
-                        <button type="submit" id="form-submit-btn" class="px-6 py-3 font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700">
-                            Simpan Transaksi
-                        </button>
-                    </div>
-                </form>
+                <!-- Modal Footer -->
+                <div class="px-6 py-4 bg-gray-50 rounded-b-lg flex justify-end space-x-3">
+                    <button type="button" id="close-modal-btn-footer"
+                            class="px-4 py-2 bg-white border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-400 transition-colors duration-150">
+                        Batal
+                    </button>
+                    <button type="submit" id="save-transaction-btn"
+                            class="px-4 py-2 bg-blue-600 border border-transparent rounded-lg text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-150">
+                        Simpan Transaksi
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- ===== Delete Confirmation Modal ===== -->
+    <div id="delete-confirm-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm hidden p-4">
+        <div class="bg-white rounded-lg shadow-xl w-full max-w-sm m-auto">
+            <div class="p-6">
+                <h3 class="text-lg font-bold text-gray-900">Hapus Transaksi</h3>
+                <p id="delete-modal-text" class="mt-2 text-sm text-gray-600">Apakah Anda yakin ingin menghapus transaksi ini? Tindakan ini tidak dapat dibatalkan.</p>
+            </div>
+            <div class="px-6 py-4 bg-gray-50 rounded-b-lg flex justify-end space-x-3">
+                <button id="cancel-delete-btn" class="px-4 py-2 bg-white border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-400">
+                    Batal
+                </button>
+                <button id="confirm-delete-btn" class="px-4 py-2 bg-red-600 border border-transparent rounded-lg text-sm font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+                    Ya, Hapus
+                </button>
             </div>
         </div>
     </div>
+    <!-- ===== End Delete Modal ===== -->
 
 
-    <!-- ===================================== -->
-    <!-- SCRIPT (Firebase & Logic Aplikasi)    -->
-    <!-- ===================================== -->
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-    <!-- 3. Muat Firebase SDKs -->
+    <!-- Firebase SDK -->
     <script type="module">
-        // Impor fungsi-fungsi Firebase yang diperlukan
+        // Firebase SDK
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { 
-            getAuth, 
-            onAuthStateChanged, 
-            signInWithEmailAndPassword, 
-            signOut,
-            setPersistence,
-            browserLocalPersistence, // Menyimpan login
-            signInWithCustomToken // <-- FUNGSI YANG HILANG DITAMBAHKAN DI SINI
-        } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { 
-            getFirestore, 
-            collection, 
-            doc, 
-            getDoc, // <-- TAMBAHKAN getDoc
-            addDoc, 
-            updateDoc,
-            deleteDoc,
-            onSnapshot, 
-            query,
-            serverTimestamp,
-            setLogLevel
-        } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut }_import;
+        // Ganti import di atas dengan baris di bawah ini
+        import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc, addDoc, setDoc, updateDoc, deleteDoc, onSnapshot, collection, query, where, getDocs, orderBy, serverTimestamp, setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         // =============================================
         // PENTING: KONFIGURASI FIREBASE ANDA
         // =============================================
         
-        // !! PERHATIAN !!
-        // KONFIGURASI DI BAWAH INI ADALAH KUNCI MASALAH KITA.
-        // const firebaseConfig = JSON.parse(typeof __firebase_config !== 'undefined' ? __firebase_config : '{}');
-        // Baris di atas (yang dikomentari) menghubungkan ke project 'bard-frontend' (terlihat di console Anda),
-        // BUKAN project Firebase Anda.
-        
         // GANTI DENGAN KONFIGURASI ANDA SENDIRI DI BAWAH INI:
-        // 1. Buka Firebase Console Anda
-        // 2. Klik "Project Settings" (ikon gerigi di sebelah "Project Overview")
-        // 3. Scroll ke bawah ke "Your apps" -> "SDK setup and configuration"
-        // 4. Pilih "Config"
-        // 5. Salin (copy) semua yang ada di dalam objek 'const firebaseConfig = { ... }'
-        // 6. Tempel (paste) di bawah ini, MENGGANTIKAN placeholder.
-        
         const firebaseConfig = {
           apiKey: "AIzaSyBJjNIH6E47Iqtul0Cj-6awqMeEFLQ_60Q",
           authDomain: "fit-fc.firebaseapp.com",
@@ -356,13 +357,12 @@
         
         // Kita akan abaikan appId dan token bawaan, karena kita pakai config Anda.
         const appId = firebaseConfig.projectId; // Gunakan projectId Anda sebagai appId
-        const initialAuthToken = null; // Abaikan token bawaan
-
+        
         // Cek jika config masih placeholder
         if (firebaseConfig.apiKey.startsWith("PASTE_")) {
             console.error("========================================");
             console.error("!! KONFIGURASI FIREBASE BELUM DIISI !!");
-            console.error("Silakan edit file aplikasi-keuangan.html (baris 336-342)");
+            console.error("Silakan edit file ini (baris 336-342)");
             console.error("dan ganti placeholder dengan config dari Firebase project Anda.");
             console.error("========================================");
             // Sembunyikan login form agar tidak membingungkan
@@ -370,7 +370,7 @@
                 <div class="w-full max-w-md p-8 bg-white rounded-lg shadow-xl text-center">
                     <h2 class="text-2xl font-bold text-red-600">Konfigurasi Firebase Belum Diisi</h2>
                     <p class="mt-4 text-gray-700">
-                        Silakan buka file \`aplikasi-keuangan.html\` (baris 336-342) dan isi
+                        Silakan buka file ini (baris 336-342) dan isi
                         dengan \`firebaseConfig\` dari project Firebase Anda.
                     </p>
                 </div>
@@ -379,419 +379,483 @@
 
         // Inisialisasi Firebase
         const app = initializeApp(firebaseConfig);
-        // Tampilkan config di console untuk debugging
-        console.log("Firebase di-inisialisasi dengan config:", JSON.parse(JSON.stringify(firebaseConfig)));
-        const auth = getAuth(app);
         const db = getFirestore(app);
-        
-        // Aktifkan log untuk debugging
-        setLogLevel('Debug');
+        const auth = getAuth(app);
+        setLogLevel('debug'); // Aktifkan log Firebase
 
-        // Variabel global aplikasi
+        // Global variables
         let currentAdmin = null;
-        let paymentChart = null;
-        let allTransactions = []; // Cache untuk data transaksi
+        let allTransactions = [];
+        let transactionsListener = null;
+        let transactionsCollectionPath = '';
+        let transactionChart = null;
+        let currentEditingId = null; // Untuk fitur Edit nanti
+        let currentDeleteId = null; // Variabel untuk menyimpan ID yang akan dihapus
+
+        // DOM Elements
+        const loginOverlay = document.getElementById('login-overlay');
+        const loginForm = document.getElementById('login-form');
+        const loginButton = document.getElementById('login-button');
+        const loginError = document.getElementById('login-error');
+        const appContainer = document.getElementById('app-container');
+        const sidebar = document.getElementById('sidebar');
+        const openSidebarBtn = document.getElementById('open-sidebar-btn');
+        const closeSidebarBtn = document.getElementById('close-sidebar-btn');
+        const logoutButton = document.getElementById('logout-button');
+        const addTransactionBtnMain = document.getElementById('add-transaction-btn-main');
+        const adminNameDisplay = document.getElementById('admin-name-display');
+        const adminEmailDisplay = document.getElementById('admin-email-display');
+        
+        // Views
+        const dashboardView = document.getElementById('dashboard-view');
+        const historyView = document.getElementById('history-view');
+        
+        // Navigation
+        const navDashboard = document.getElementById('nav-dashboard');
+        const navHistory = document.getElementById('nav-history');
+        
+        // Transaction Modal
+        const transactionModal = document.getElementById('transaction-modal');
+        const transactionForm = document.getElementById('transaction-form');
+        const modalTitle = document.getElementById('modal-title');
+        const closeModalBtnX = document.getElementById('close-modal-btn-x');
+        const closeModalBtnFooter = document.getElementById('close-modal-btn-footer');
+        const saveTransactionBtn = document.getElementById('save-transaction-btn');
+        const modalTimestamp = document.getElementById('modal-timestamp');
+        const modalAdminName = document.getElementById('modal-admin-name');
+        
+        // Delete Modal
+        const deleteConfirmModal = document.getElementById('delete-confirm-modal');
+        const deleteModalText = document.getElementById('delete-modal-text');
+        const cancelDeleteBtn = document.getElementById('cancel-delete-btn');
+        const confirmDeleteBtn = document.getElementById('confirm-delete-btn');
+
+        // History Search
+        const historySearch = document.getElementById('history-search');
 
         // =============================================
-        // 1. MANAJEMEN AUTENTIKASI (LOGIN/LOGOUT)
+        // APLIKASI UTAMA
         // =============================================
         
-        // Coba login dengan token kustom (jika ada) atau anonim
-        async function initializeAuth() {
-            try {
-                // Set persistensi login
-                await setPersistence(auth, browserLocalPersistence);
+        // Inisialisasi Autentikasi
+        function initializeAuth() {
+            console.log("Mencoba login otomatis...");
+            
+            // Coba login dengan token (jika ada) - ini untuk environment bawaan
+            // Kita akan modifikasi ini untuk sign-in anonim jika token tidak ada
+            const initialAuthToken = null; // Kita set null karena pakai config sendiri
 
-                if (initialAuthToken) {
-                    console.log("Mencoba login dengan token kustom...");
-                    await signInWithCustomToken(auth, initialAuthToken);
+            if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                signInWithCustomToken(auth, __initial_auth_token)
+                    .catch((error) => {
+                        console.warn("Login token kustom gagal, mencoba anonim:", error);
+                        signInAnonymously(auth).catch(err => console.error("Login anonim juga gagal:", err));
+                    });
+            } else {
+                 // Tidak ada token, biarkan user login manual.
+                 // Kita tidak login anonim agar bisa paksa login admin.
+                 console.log("Tidak ada token, menunggu login manual admin.");
+            }
+
+            // Pantau status login
+            onAuthStateChanged(auth, (user) => {
+                if (user) {
+                    console.log("Admin terdeteksi:", user.email, "UID:", user.uid);
+                    
+                    // Ambil nama dari email
+                    const emailName = user.email.split('@')[0];
+                    const adminName = emailName.charAt(0).toUpperCase() + emailName.slice(1);
+                    
+                    currentAdmin = {
+                        uid: user.uid,
+                        email: user.email,
+                        name: adminName // "Dika"
+                    };
+
+                    // Tampilkan aplikasi
+                    appContainer.classList.remove('hidden');
+                    loginOverlay.classList.add('hidden');
+
+                    // Update UI Sidebar
+                    adminNameDisplay.textContent = currentAdmin.name;
+                    adminEmailDisplay.textContent = currentAdmin.email;
+
+                    // Mulai memuat data dari Firestore
+                    setupTransactionListener();
+                    
+                } else {
+                    console.log("Tidak ada admin yang login.");
+                    // Tampilkan layar login
+                    appContainer.classList.add('hidden');
+                    loginOverlay.classList.remove('hidden');
+                    
+                    // Hentikan listener data jika ada
+                    if (transactionsListener) {
+                        transactionsListener(); // Panggil fungsi unsubscribe
+                        transactionsListener = null;
+                        console.log("Listener data dihentikan.");
+                    }
                 }
-                // Jika tidak ada token, kita akan tunggu user login manual
-                console.log("Menunggu login manual admin...");
+            });
+        }
 
-            } catch (error) {
-                console.error("Gagal login otomatis:", error);
-                // Jika token gagal, tetap tunggu login manual
+        // =============================================
+        // Navigasi / Paging
+        // =============================================
+        function showView(viewId) {
+            // Sembunyikan semua view
+            dashboardView.classList.add('hidden');
+            historyView.classList.add('hidden');
+            
+            // Hapus status aktif dari semua nav
+            navDashboard.classList.remove('bg-gray-700', 'text-white');
+            navDashboard.classList.add('text-gray-300', 'hover:bg-gray-700', 'hover:text-white');
+            navHistory.classList.remove('bg-gray-700', 'text-white');
+            navHistory.classList.add('text-gray-300', 'hover:bg-gray-700', 'hover:text-white');
+
+            // Tampilkan view yang dipilih
+            if (viewId === 'dashboard-view') {
+                dashboardView.classList.remove('hidden');
+                navDashboard.classList.add('bg-gray-700', 'text-white');
+                navDashboard.classList.remove('text-gray-300', 'hover:bg-gray-700', 'hover:text-white');
+            } else if (viewId === 'history-view') {
+                historyView.classList.remove('hidden');
+                navHistory.classList.add('bg-gray-700', 'text-white');
+                navHistory.classList.remove('text-gray-300', 'hover:bg-gray-700', 'hover:text-white');
             }
         }
+
+        navDashboard.addEventListener('click', (e) => {
+            e.preventDefault();
+            showView('dashboard-view');
+        });
+
+        navHistory.addEventListener('click', (e) => {
+            e.preventDefault();
+            showView('history-view');
+        });
         
-        // Pantau status login
-        onAuthStateChanged(auth, async (user) => { // <-- JADIKAN ASYNC
-            if (user) {
-                // Admin berhasil login
-                console.log("Admin terdeteksi:", user.email, "UID:", user.uid);
+        // =============================================
+        // Logika Hapus (Delete)
+        // =============================================
+        
+        // Tampilkan modal konfirmasi
+        // Kita harus ekspos fungsi ini ke global scope agar onclick HTML bisa menemukannya
+        window.showDeleteModal = (id, name) => {
+            if (!id) return;
+            currentDeleteId = id;
+            deleteModalText.textContent = `Apakah Anda yakin ingin menghapus transaksi untuk "${name}"? Tindakan ini tidak dapat dibatalkan.`;
+            deleteConfirmModal.classList.remove('hidden');
+        }
 
-                // --- PERUBAHAN DIMULAI DI SINI ---
-                // Kita akan ambil nama dari email, contoh: "dika@admin.com" -> "Dika"
-                // 1. Ambil bagian sebelum "@"
-                let emailUsername = user.email.split('@')[0];
-                // 2. Ubah huruf pertama jadi kapital
-                let adminName = emailUsername.charAt(0).toUpperCase() + emailUsername.slice(1);
-                
-                console.log(`Nama admin di-parse dari email: ${adminName}`);
+        // Sembunyikan modal konfirmasi
+        function hideDeleteModal() {
+            currentDeleteId = null;
+            deleteConfirmModal.classList.add('hidden');
+        }
 
-                /* HAPUS LOGIKA DATABASE YANG RUMIT
-                // Tentukan path koleksi profil (sesuai aturan)
-                const adminProfilePath = \`/artifacts/${appId}/public/data/admin_profiles\`;
-                const adminProfileRef = doc(db, adminProfilePath, user.uid); // Gunakan UID sebagai ID dokumen
+        cancelDeleteBtn.addEventListener('click', hideDeleteModal);
 
-                try {
-                    console.log("Mencari profil admin di:", adminProfileRef.path);
-                    const adminProfileSnap = await getDoc(adminProfileRef); // <-- getDoc
-                    if (adminProfileSnap.exists()) {
-                        adminName = adminProfileSnap.data().name; // Ambil 'name' dari dokumen
-                        console.log("Nama asli admin ditemukan:", adminName);
-                    } else {
-                        console.warn("Profil admin tidak ditemukan di Firestore untuk UID:", user.uid, ". (Ini wajar jika belum dibuat)");
-                    }
-                } catch (error) {
-                    console.error("Gagal mengambil profil admin:", error);
-                }
-                */
+        // Aksi saat konfirmasi hapus
+        confirmDeleteBtn.addEventListener('click', async () => {
+            if (!currentDeleteId) return;
 
-                // 2. Simpan info lengkap ke variabel global
-                currentAdmin = {
-                    uid: user.uid,
-                    email: user.email,
-                    name: adminName // Gunakan nama kustom
-                };
-                // --- PERUBAHAN SELESAI ---
+            confirmDeleteBtn.disabled = true;
+            confirmDeleteBtn.textContent = 'Menghapus...';
 
-                // 3. Tampilkan aplikasi, sembunyikan login
-                document.getElementById('app-container').classList.remove('hidden');
-                document.getElementById('login-overlay').classList.add('hidden');
-                
-                // 4. Update UI dengan info admin
-                document.getElementById('admin-name-display').textContent = currentAdmin.name; // <-- Gunakan .name
-                document.getElementById('admin-email-display').textContent = currentAdmin.email; // <-- TAMBAHAN BARU
-                document.getElementById('form-admin-name').textContent = currentAdmin.name; // <-- Gunakan .name
-
-                // 5. Mulai memuat data dari Firestore
-                setupTransactionListener();
-
-            } else {
-                // Tidak ada admin yang login
-                console.log("Tidak ada admin yang login. Tampilkan layar login.");
-                currentAdmin = null;
-                
-                // Sembunyikan aplikasi, tampilkan login
-                document.getElementById('app-container').classList.add('hidden');
-                document.getElementById('login-overlay').classList.remove('hidden');
+            try {
+                const docRef = doc(db, transactionsCollectionPath, currentDeleteId);
+                await deleteDoc(docRef);
+                // Data akan otomatis refresh berkat onSnapshot
+                console.log("Dokumen berhasil dihapus!");
+            } catch (error) {
+                console.error("Error menghapus data:", error);
+                // Kita tidak bisa pakai alert() di sini
+                loginError.textContent = "Gagal menghapus data.";
+                loginError.classList.remove('hidden');
+                setTimeout(() => loginError.classList.add('hidden'), 3000);
+            } finally {
+                hideDeleteModal();
+                confirmDeleteBtn.disabled = false;
+                confirmDeleteBtn.textContent = 'Ya, Hapus';
             }
         });
 
-        // Handle form login
-        const loginForm = document.getElementById('login-form');
-        const loginError = document.getElementById('login-error');
+        // =============================================
+        // Logika Form (Create / Update)
+        // =============================================
+        
+        // Format input nominal saat diketik
+        const amountInput = document.getElementById('amount');
+        amountInput.addEventListener('input', (e) => {
+            let value = e.target.value.replace(/[^0-9]/g, ''); // Hapus semua selain angka
+            if (value) {
+                e.target.value = parseInt(value, 10).toLocaleString('id-ID');
+            } else {
+                e.target.value = '';
+            }
+        });
+
+        function openModalForCreate() {
+            currentEditingId = null;
+            transactionForm.reset();
+            modalTitle.textContent = 'Tambah Pemasukan Baru';
+            saveTransactionBtn.textContent = 'Simpan Transaksi';
+            modalTimestamp.textContent = new Date().toLocaleString('id-ID', { dateStyle: 'short', timeStyle: 'short' });
+            modalAdminName.textContent = currentAdmin.name;
+            transactionModal.classList.remove('hidden');
+        }
+        
+        // (Fitur Edit bisa ditambahkan di sini nanti)
+        // function openModalForEdit(item) { ... }
+
+        function closeModal() {
+            transactionModal.classList.add('hidden');
+            transactionForm.reset();
+            currentEditingId = null;
+        }
+
+        addTransactionBtnMain.addEventListener('click', openModalForCreate);
+        closeModalBtnX.addEventListener('click', closeModal);
+        closeModalBtnFooter.addEventListener('click', closeModal);
+
+        // Submit form
+        transactionForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if (!currentAdmin) {
+                console.error("Tidak ada admin, submit dibatalkan.");
+                return;
+            }
+
+            saveTransactionBtn.disabled = true;
+            saveTransactionBtn.textContent = 'Menyimpan...';
+
+            // Ambil nilai nominal dan ubah ke angka
+            const rawAmount = document.getElementById('amount').value.replace(/[^0-9]/g, '');
+            
+            const formData = {
+                playerName: document.getElementById('playerName').value,
+                amount: parseInt(rawAmount, 10) || 0,
+                paymentType: document.getElementById('paymentType').value,
+                notes: document.getElementById('notes').value,
+                lastUpdatedAt: serverTimestamp(), // Selalu update timestamp
+                lastUpdatedByAdminId: currentAdmin.uid,
+                lastUpdatedByAdminName: currentAdmin.name // "Dika"
+            };
+
+            try {
+                if (currentEditingId) {
+                    // Logic untuk Update (Edit)
+                    const docRef = doc(db, transactionsCollectionPath, currentEditingId);
+                    await updateDoc(docRef, formData);
+                    console.log("Data berhasil diupdate!");
+                } else {
+                    // Logic untuk Create (Tambah Baru)
+                    // Tambahkan field data dibuat
+                    formData.createdAt = serverTimestamp();
+                    formData.createdByAdminId = currentAdmin.uid;
+                    formData.createdByAdminName = currentAdmin.name;
+                    
+                    await addDoc(collection(db, transactionsCollectionPath), formData);
+                    console.log("Data baru berhasil disimpan!");
+                }
+            } catch (error) {
+                console.error("Error menyimpan data:", error);
+                loginError.textContent = "Gagal menyimpan data. Cek console.";
+                loginError.classList.remove('hidden');
+                setTimeout(() => loginError.classList.add('hidden'), 3000);
+            } finally {
+                saveTransactionBtn.disabled = false;
+                saveTransactionBtn.textContent = 'Simpan Transaksi';
+                closeModal();
+            }
+        });
+
+        // =============================================
+        // Logika Login / Logout
+        // =============================================
+
         loginForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-            const email = document.getElementById('login-email').value;
-            const password = document.getElementById('login-password').value;
+            loginButton.disabled = true;
+            loginButton.textContent = 'Memproses...';
             loginError.classList.add('hidden');
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
 
             try {
                 await signInWithEmailAndPassword(auth, email, password);
                 // onAuthStateChanged akan menangani sisanya
             } catch (error) {
-                // Tampilkan error code yang lebih spesifik
-                console.error("DETAIL ERROR LOGIN:", error.code, error.message);
-                
-                // Terjemahkan error
+                console.error("DETAIL ERROR LOGIN:", error.code, error);
                 if (error.code === 'auth/operation-not-allowed') {
-                    loginError.textContent = "Login Email/Password belum diaktifkan di Firebase.";
-                } else if (error.code === 'auth/invalid-credential') {
-                     loginError.textContent = "Email atau password salah.";
+                    loginError.textContent = 'Login Email/Password belum diaktifkan di Firebase.';
+                } else if (error.code === 'auth/invalid-credential' || error.code === 'auth/wrong-password' || error.code === 'auth/user-not-found') {
+                    loginError.textContent = 'Email atau password salah.';
                 } else {
-                     loginError.textContent = "Email atau password salah.";
+                    loginError.textContent = `Error: ${error.code}`;
                 }
                 loginError.classList.remove('hidden');
+            } finally {
+                loginButton.disabled = false;
+                loginButton.textContent = 'Masuk';
             }
         });
 
-        // Handle logout
-        document.getElementById('logout-button').addEventListener('click', async () => {
-            // if (confirm('Apakah Anda yakin ingin keluar?')) { // <-- DIHAPUS, KARENA confirm() TIDAK BERFUNGSI DI IFRAME
-                try {
-                    await signOut(auth);
-                    // onAuthStateChanged akan menangani sisanya
-                } catch (error) {
-                    console.error("Gagal logout:", error);
-                }
-            // } // <-- DIHAPUS
+        logoutButton.addEventListener('click', async () => {
+            // Hapus konfirmasi `confirm()`
+            try {
+                await signOut(auth);
+                // onAuthStateChanged akan menangani sisanya (sembunyikan app, tampilkan login)
+                console.log("Admin berhasil logout.");
+            } catch (error) {
+                console.error("Error saat logout:", error);
+            }
         });
 
-        // Panggil inisialisasi auth
-        initializeAuth();
+        // =============================================
+        // Mobile Sidebar Toggle
+        // =============================================
+        openSidebarBtn.addEventListener('click', () => {
+            sidebar.classList.remove('-translate-x-full');
+        });
+        closeSidebarBtn.addEventListener('click', () => {
+            sidebar.classList.add('-translate-x-full');
+        });
+        // Tutup sidebar saat klik navigasi di mobile
+        document.querySelectorAll('#sidebar nav a').forEach(link => {
+            link.addEventListener('click', () => {
+                if (window.innerWidth < 768) { // Ukuran md
+                    sidebar.classList.add('-translate-x-full');
+                }
+            });
+        });
 
         // =============================================
-        // 2. MANAJEMEN DATABASE (FIRESTORE)
+        // Inisialisasi Data (Realtime Listener)
         // =============================================
         
-        // Tentukan path koleksi (Gunakan path publik sesuai aturan)
-        const transactionsCollectionPath = `/artifacts/${appId}/public/data/transactions`;
-        const transactionsCollection = collection(db, transactionsCollectionPath);
-        console.log(`Menggunakan path koleksi: ${transactionsCollectionPath}`);
-
         function setupTransactionListener() {
-            if (!currentAdmin) {
-                console.warn("Tidak bisa memuat data, admin belum login.");
-                return;
+            // Tentukan path koleksi berdasarkan aturan keamanan
+            transactionsCollectionPath = `artifacts/${appId}/public/data/transactions`;
+            console.log("Menggunakan path koleksi:", transactionsCollectionPath);
+
+            // Buat query untuk data, urutkan berdasarkan timestamp terbaru
+            const q = query(collection(db, transactionsCollectionPath), orderBy('lastUpdatedAt', 'desc'));
+
+            // Hentikan listener lama jika ada
+            if (transactionsListener) {
+                transactionsListener();
             }
 
-            console.log("Memulai listener Firestore...");
-            
-            // Buat query
-            const q = query(transactionsCollection);
-
-            // Gunakan onSnapshot untuk data real-time
-            onSnapshot(q, (snapshot) => {
-                console.log(`Menerima ${snapshot.size} data transaksi.`);
-                allTransactions = [];
+            // Mulai listener baru
+            transactionsListener = onSnapshot(q, (querySnapshot) => {
+                console.log("Data Firestore diterima:", querySnapshot.size, "dokumen.");
+                allTransactions = querySnapshot.docs.map(doc => ({
+                    id: doc.id,
+                    ...doc.data()
+                }));
                 
-                snapshot.forEach(doc => {
-                    allTransactions.push({ id: doc.id, ...doc.data() });
-                });
-
-                // Urutkan data (terbaru dulu)
-                allTransactions.sort((a, b) => { // <-- PERBAIKAN: Menambahkan '=>'
-                    const timeA = a.lastUpdatedAt ? a.lastUpdatedAt.toMillis() : 0;
-                    const timeB = b.lastUpdatedAt ? b.lastUpdatedAt.toMillis() : 0;
-                    return timeB - timeA;
-                });
-
-
                 // Update semua bagian UI
                 updateDashboard(allTransactions);
-                renderHistoryList(allTransactions);
+                renderHistoryList(allTransactions, historySearch.value); // Panggil fungsi baru
                 updateRecentActivity(allTransactions);
-                renderDashboardTable(allTransactions); // <-- PANGGIL FUNGSI BARU
+                renderDashboardTable(allTransactions); 
 
             }, (error) => {
                 console.error("Error mendapatkan data Firestore:", error);
-                document.getElementById('history-loading').textContent = "Gagal memuat data.";
+                if (error.code === "permission-denied" || error.code === "failed-precondition") {
+                    loginError.textContent = "Error Izin: Pastikan Security Rules Firestore Anda sudah benar.";
+                    loginError.classList.remove('hidden');
+                }
             });
         }
 
         // =============================================
-        // 3. LOGIC FORM & MODAL TRANSAKSI
+        // Fungsi Render UI (Update Tampilan)
         // =============================================
-        
-        const modal = document.getElementById('modal-add-transaction');
-        const modalTitle = document.getElementById('modal-title');
-        const form = document.getElementById('transaction-form');
-        const submitBtn = document.getElementById('form-submit-btn');
-        const transactionIdField = document.getElementById('transaction-id');
-        const timestampField = document.getElementById('form-timestamp');
 
-        // Fungsi untuk membuka modal
-        function openModal(mode = 'add', doc = null) {
-            form.reset();
-            
-            if (mode === 'add') {
-                modalTitle.textContent = 'Tambah Pemasukan Baru';
-                submitBtn.textContent = 'Simpan Transaksi';
-                transactionIdField.value = '';
-                timestampField.textContent = new Date().toLocaleString('id-ID');
-            } else if (mode === 'edit' && doc) {
-                modalTitle.textContent = 'Edit Transaksi';
-                submitBtn.textContent = 'Update Transaksi';
-                transactionIdField.value = doc.id;
-                
-                // Isi form dengan data
-                document.getElementById('player-name').value = doc.playerName;
-                document.getElementById('amount').value = doc.amount;
-                document.getElementById('payment-type').value = doc.paymentType;
-                document.getElementById('notes').value = doc.notes || '';
-                
-                const editTimestamp = doc.createdAt && doc.createdAt.toDate ? doc.createdAt.toDate().toLocaleString('id-ID') : 'N/A';
-                timestampField.textContent = `Dibuat: ${editTimestamp}`;
-            }
-
-                document.getElementById('form-admin-name').textContent = currentAdmin.name; // <-- Gunakan .name
-            modal.classList.remove('hidden');
+        // Fungsi helper format mata uang
+        function formatCurrency(value) {
+            if (typeof value !== 'number') value = 0;
+            return 'Rp ' + value.toLocaleString('id-ID');
         }
 
-        // Fungsi untuk menutup modal
-        function closeModal() {
-            modal.classList.add('hidden');
-            form.reset();
-        }
-
-        // Event listener untuk tombol buka modal
-        document.getElementById('add-btn-desktop').addEventListener('click', () => openModal('add'));
-        document.getElementById('add-btn-mobile').addEventListener('click', () => openModal('add'));
-
-        // Event listener untuk tombol tutup modal
-        document.getElementById('modal-close-btn').addEventListener('click', closeModal);
-        document.getElementById('modal-cancel-btn').addEventListener('click', closeModal);
-
-        // Handle submit form (Add / Edit)
-        form.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            if (!currentAdmin) {
-                // Jangan gunakan alert
-                console.error("Sesi Anda berakhir. Silakan login ulang.");
-                return;
-            }
-
-            const transactionId = transactionIdField.value;
-            const formData = {
-                playerName: document.getElementById('player-name').value,
-                amount: parseFloat(document.getElementById('amount').value),
-                paymentType: document.getElementById('payment-type').value,
-                notes: document.getElementById('notes').value,
-                lastUpdatedAt: serverTimestamp(), // Selalu update timestamp
-                lastUpdatedByAdminId: currentAdmin.uid,
-                lastUpdatedByAdminName: currentAdmin.name // <-- PERUBAHAN DI SINI
-            };
-
-            try {
-                if (transactionId) {
-                    // Ini adalah mode EDIT
-                    console.log(`Updating doc: ${transactionId}`);
-                    const docRef = doc(db, transactionsCollectionPath, transactionId);
-                    await updateDoc(docRef, formData);
-                    
-                } else {
-                    // Ini adalah mode ADD
-                    console.log("Adding new doc...");
-                    // Tambahkan field khusus untuk data baru
-                    formData.createdAt = serverTimestamp();
-                    formData.createdByAdminId = currentAdmin.uid;
-                    formData.createdByAdminName = currentAdmin.name; // <-- PERUBAHAN DI SINI
-                    
-                    await addDoc(transactionsCollection, formData);
-                }
-                
-                closeModal(); // Tutup modal setelah berhasil
-                // onSnapshot akan otomatis update UI
-                
-            } catch (error) {
-                console.error("Error menyimpan data:", error);
-                // Jangan gunakan alert
-            }
-        });
-
-
-        // =============================================
-        // 4. UPDATE UI & RENDERING
-        // =============================================
-
-        // Format Uang (Rupiah)
-        const formatCurrency = (amount) => {
-            return new Intl.NumberFormat('id-ID', {
-                style: 'currency',
-                currency: 'IDR',
-                minimumFractionDigits: 0
-            }).format(amount || 0);
-        };
-
-        // Update stat di Dashboard
+        // Update 3 box di atas
         function updateDashboard(data) {
-            const totalIncome = data.reduce((sum, item) => sum + (item.amount || 0), 0);
+            const totalRevenue = data.reduce((sum, tx) => sum + tx.amount, 0);
             const totalTransactions = data.length;
-            const uniquePlayers = new Set(data.map(item => (item.playerName || '').toLowerCase())).size;
+            const uniquePlayers = new Set(data.map(tx => tx.playerName)).size;
 
-            document.getElementById('stat-total-income').textContent = formatCurrency(totalIncome);
-            document.getElementById('stat-total-transactions').textContent = totalTransactions;
-            document.getElementById('stat-unique-players').textContent = uniquePlayers;
+            document.getElementById('total-revenue').textContent = formatCurrency(totalRevenue);
+            document.getElementById('total-transactions').textContent = totalTransactions;
+            document.getElementById('unique-players').textContent = uniquePlayers;
 
             // Update Chart
             updatePaymentChart(data);
         }
 
-        // Update Chart
+        // Update Chart Donat
         function updatePaymentChart(data) {
-            const chartData = {
-                qris: 0,
-                transfer: 0,
-                tunai: 0
-            };
-            
-            data.forEach(item => {
-                if (chartData.hasOwnProperty(item.paymentType)) {
-                    chartData[item.paymentType] += (item.amount || 0);
-                }
-            });
+            const ctx = document.getElementById('payment-chart').getContext('2d');
+            const counts = data.reduce((acc, tx) => {
+                acc[tx.paymentType] = (acc[tx.paymentType] || 0) + tx.amount;
+                return acc;
+            }, {});
 
-            const chartCtx = document.getElementById('payment-chart').getContext('2d');
-            
-            if (paymentChart) {
-                paymentChart.destroy(); // Hancurkan chart lama
-            }
-            
-            paymentChart = new Chart(chartCtx, {
-                type: 'doughnut',
-                data: {
-                    labels: ['QRIS', 'Transfer Bank', 'Tunai'],
-                    datasets: [{
-                        data: [chartData.qris, chartData.transfer, chartData.tunai],
-                        backgroundColor: ['#3B82F6', '#10B981', '#F59E0B'],
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            position: 'bottom'
+            const chartData = {
+                labels: ['QRIS', 'Transfer Bank', 'Tunai'],
+                datasets: [{
+                    label: 'Pemasukan',
+                    data: [
+                        counts['qris'] || 0,
+                        counts['transfer'] || 0,
+                        counts['tunai'] || 0
+                    ],
+                    backgroundColor: [
+                        '#3B82F6', // blue-500
+                        '#10B981', // green-500
+                        '#F59E0B'  // yellow-500
+                    ],
+                    borderColor: '#FFFFFF',
+                    borderWidth: 2,
+                    hoverOffset: 4
+                }]
+            };
+
+            if (transactionChart) {
+                transactionChart.data = chartData;
+                transactionChart.update();
+            } else {
+                transactionChart = new Chart(ctx, {
+                    type: 'doughnut',
+                    data: chartData,
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        cutout: '70%',
+                        plugins: {
+                            legend: {
+                                position: 'bottom',
+                                labels: {
+                                    font: { family: "'Inter', sans-serif" },
+                                    padding: 20
+                                }
+                            }
                         }
                     }
-                }
-            });
+                });
+            }
         }
         
-        // Update list Aktivitas Terbaru
-        function updateRecentActivity(data) {
-            const list = document.getElementById('recent-activity-list');
-            list.innerHTML = ''; // Kosongkan list
-
-            if (data.length === 0) {
-                list.innerHTML = '<p class="text-sm text-gray-400">Belum ada aktivitas.</p>';
-                return;
-            }
-
-            // Ambil 5 data terbaru (data sudah diurutkan)
-            const recentData = data.slice(0, 5);
-
-            recentData.forEach(item => {
-                // Cek data timestamp
-                const isNew = !item.createdAt || !item.lastUpdatedAt || item.lastUpdatedAt.toMillis() === item.createdAt.toMillis();
-                const action = isNew ? 'menambah' : 'mengedit';
-                
-                let adminName = item.lastUpdatedByAdminName;
-                if (!adminName) {
-                    adminName = item.lastUpdatedByAdminId || 'Admin';
-                } 
-
-                const time = item.lastUpdatedAt && item.lastUpdatedAt.toDate ? item.lastUpdatedAt.toDate().toLocaleTimeString('id-ID') : 'N/A';
-
-                const itemEl = document.createElement('div');
-                itemEl.className = 'flex items-start space-x-3';
-                itemEl.innerHTML = `
-                    <div class="flex-shrink-0 w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
-                        <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
-                    </div>
-                    <div>
-                        <p class="text-sm text-gray-700">
-                            <span class="font-semibold">${adminName}</span>
-                            ${action} transaksi
-                            <span class="font-semibold">${item.playerName || 'N/A'}</span>
-                        </p>
-                        <p class="text-xs text-gray-400">${time}</p>
-                    </div>
-                `;
-                list.appendChild(itemEl);
-            });
-        }
-
         // Render tabel di Dashboard
         function renderDashboardTable(data) {
             const list = document.getElementById('dashboard-recent-tx-list');
             list.innerHTML = ''; // Kosongkan list
 
             if (data.length === 0) {
-                list.innerHTML = '<tr><td colspan="6" class="px-6 py-4 text-center text-sm text-gray-400">Belum ada transaksi.</td></tr>';
+                list.innerHTML = '<tr><td colspan="7" class="px-6 py-4 text-center text-sm text-gray-400">Belum ada transaksi.</td></tr>';
                 return;
             }
 
@@ -807,20 +871,17 @@
 
             recentData.forEach(item => {
                 const tr = document.createElement('tr');
-                tr.className = "hover:bg-gray-50";
+                tr.className = "hover:bg-gray-50 transition-colors duration-150";
                 
-                // Format Tanggal/Jam
-                const lastUpdate = item.lastUpdatedAt && item.lastUpdatedAt.toDate ? item.lastUpdatedAt.toDate().toLocaleString('id-ID', { dateStyle: 'short', timeStyle: 'short' }) : 'N/A';
-                // Nama Admin
+                const lastUpdate = item.lastUpdatedAt?.toDate ? item.lastUpdatedAt.toDate().toLocaleString('id-ID', { dateStyle: 'short', timeStyle: 'short' }) : 'N/A';
                 const adminName = item.lastUpdatedByAdminName || 'Admin';
-                // Keterangan
                 const notes = item.notes || '-';
-                // Style Jenis Pembayaran
                 const paymentStyle = paymentTypeStyles[item.paymentType] || 'bg-gray-100 text-gray-800';
+                const playerName = item.playerName || 'N/A';
                 
                 tr.innerHTML = `
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">${lastUpdate.replace(',', ' - ')}</td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${item.playerName || 'N/A'}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${playerName}</td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">${formatCurrency(item.amount)}</td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm">
                         <span class="px-2 py-0.5 text-xs font-medium rounded-full ${paymentStyle}">
@@ -829,6 +890,9 @@
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">${adminName}</td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 truncate max-w-xs" title="${notes}">${notes}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                        <button onclick="showDeleteModal('${item.id}', '${playerName.replace(/'/g, "\\'")}')" class="text-red-600 hover:text-red-900 transition-colors duration-150">Hapus</button>
+                    </td>
                 `;
                 list.appendChild(tr);
             });
@@ -836,156 +900,105 @@
 
         // Render daftar di halaman Riwayat
         function renderHistoryList(data, filter = '') {
-            const container = document.getElementById('history-list-container');
-            const loading = document.getElementById('history-loading');
-            container.innerHTML = ''; // Kosongkan
-            
+            const list = document.getElementById('history-list-tbody');
+            if (!list) return; // Pastikan elemen ada
+            list.innerHTML = ''; // Kosongkan list
+
+            const normalizedFilter = filter.toLowerCase();
             const filteredData = data.filter(item => 
-                (item.playerName || '').toLowerCase().includes(filter.toLowerCase())
+                (item.playerName || '').toLowerCase().includes(normalizedFilter)
             );
 
             if (filteredData.length === 0) {
-                loading.textContent = 'Tidak ada data transaksi.';
-                if(document.getElementById(loading.id) == null) {
-                    container.appendChild(loading);
-                }
+                list.innerHTML = '<tr><td colspan="7" class="px-6 py-4 text-center text-sm text-gray-400">Tidak ada transaksi yang cocok.</td></tr>';
                 return;
             }
 
-            filteredData.forEach(item => {
-                const card = document.createElement('div');
-                card.className = 'p-5 bg-white rounded-lg shadow-md flex flex-col md:flex-row md:items-center md:justify-between';
-                
-                const paymentTypeStyles = {
-                    qris: 'bg-blue-100 text-blue-800',
-                    transfer: 'bg-green-100 text-green-800',
-                    tunai: 'bg-yellow-100 text-yellow-800'
-                };
-                
-                const lastUpdate = item.lastUpdatedAt && item.lastUpdatedAt.toDate ? item.lastUpdatedAt.toDate().toLocaleString('id-ID', { dateStyle: 'medium', timeStyle: 'short' }) : 'N/A';
-                
-                let adminName = item.lastUpdatedByAdminName;
-                if (!adminName || adminName === "null") {
-                    adminName = item.lastUpdatedByAdminId ? `ID: ...${item.lastUpdatedByAdminId.slice(-4)}` : 'Admin';
-                }
+            // Style untuk jenis pembayaran
+            const paymentTypeStyles = {
+                qris: 'bg-blue-100 text-blue-800',
+                transfer: 'bg-green-100 text-green-800',
+                tunai: 'bg-yellow-100 text-yellow-800'
+            };
 
-                card.innerHTML = `
-                    <div class="flex-1">
-                        <div class="flex items-center justify-between">
-                            <span class="text-xl font-semibold text-gray-800">${item.playerName || 'N/A'}</span>
-                            <span class="text-xl font-bold text-green-600">${formatCurrency(item.amount)}</span>
-                        </div>
-                        <div class="flex items-center mt-2 space-x-3">
-                            <span class="px-2 py-0.5 text-xs font-medium rounded-full ${paymentTypeStyles[item.paymentType] || 'bg-gray-100 text-gray-800'}">
-                                ${item.paymentType || 'N/A'}
-                            </span>
-                            <span class="text-sm text-gray-500">${item.notes || 'Tidak ada keterangan'}</span>
-                        </div>
-                        <p class="mt-3 text-xs text-gray-400">
-                            Terakhir diupdate: ${lastUpdate} oleh 
-                            <span class="font-medium text-gray-500">${adminName}</span>
-                        </p>
-                    </div>
-                    <div class="flex mt-4 space-x-2 md:mt-0 md:ml-6">
-                        <button class="edit-btn px-4 py-2 text-sm font-medium text-blue-700 bg-blue-100 rounded-lg hover:bg-blue-200" data-id="${item.id}">Edit</button>
-                    </div>
+            filteredData.forEach(item => {
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-gray-50 transition-colors duration-150";
+                
+                const lastUpdate = item.lastUpdatedAt?.toDate ? item.lastUpdatedAt.toDate().toLocaleString('id-ID', { dateStyle: 'short', timeStyle: 'short' }) : 'N/A';
+                const adminName = item.lastUpdatedByAdminName || 'Admin';
+                const notes = item.notes || '-';
+                const paymentStyle = paymentTypeStyles[item.paymentType] || 'bg-gray-100 text-gray-800';
+                const playerName = item.playerName || 'N/A';
+                
+                tr.innerHTML = `
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">${lastUpdate.replace(',', ' - ')}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${playerName}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">${formatCurrency(item.amount)}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm">
+                        <span class="px-2 py-0.5 text-xs font-medium rounded-full ${paymentStyle}">
+                            ${item.paymentType || 'N/A'}
+                        </span>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">${adminName}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 truncate max-w-xs" title="${notes}">${notes}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                        <button onclick="showDeleteModal('${item.id}', '${playerName.replace(/'/g, "\\'")}')" class="text-red-600 hover:text-red-900 transition-colors duration-150">Hapus</button>
+                    </td>
                 `;
-                container.appendChild(card);
-            });
-            
-            // Tambahkan event listener untuk tombol edit
-            document.querySelectorAll('.edit-btn').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    const id = btn.dataset.id;
-                    const docToEdit = allTransactions.find(t => t.id === id);
-                    if (docToEdit) {
-                        openModal('edit', docToEdit);
-                    }
-                });
+                list.appendChild(tr);
             });
         }
-        
-        // Handle search di riwayat
-        document.getElementById('search-history').addEventListener('input', (e) => {
+
+        // Listener untuk search
+        historySearch.addEventListener('input', (e) => {
             renderHistoryList(allTransactions, e.target.value);
         });
 
-        // =============================================
-        // 5. LOGIC NAVIGASI (Sidebar & Views)
-        // =============================================
-        
-        const navLinks = document.querySelectorAll('.nav-link');
-        const views = document.querySelectorAll('.app-view');
-        const headerTitle = document.querySelector('#header span');
+        // Render daftar di sidebar
+        function updateRecentActivity(data) {
+            const list = document.getElementById('recent-activity-list');
+            list.innerHTML = ''; // Kosongkan list
 
-        navLinks.forEach(link => {
-            link.addEventListener('click', (e) => {
-                e.preventDefault();
-                const viewName = link.dataset.view;
+            if (data.length === 0) {
+                list.innerHTML = '<li class="text-center text-sm text-gray-400">Belum ada aktivitas.</li>';
+                return;
+            }
 
-                // Update link aktif
-                navLinks.forEach(l => l.classList.remove('active'));
-                link.classList.add('active');
+            // Ambil 5 aktivitas terbaru
+            const recentData = data.slice(0, 5);
 
-                // Tampilkan view yang dipilih
-                views.forEach(v => v.classList.add('hidden'));
-                document.getElementById(`view-${viewName}`).classList.remove('hidden');
-
-                // Update judul header (mobile)
-                headerTitle.textContent = link.querySelector('span').textContent;
-
-                // Tutup sidebar mobile
-                closeSidebar();
+            recentData.forEach(item => {
+                const li = document.createElement('li');
+                li.className = 'flex items-center space-x-3';
+                
+                const adminName = item.lastUpdatedByAdminName || 'Admin';
+                const playerName = item.playerName || 'N/A';
+                // Cek apakah data baru dibuat atau diedit (nanti saat fitur edit ada)
+                const isNew = item.createdAt && item.lastUpdatedAt && item.createdAt.seconds === item.lastUpdatedAt.seconds;
+                const actionText = isNew ? "menambah" : "mengedit"; // Sederhanakan
+                
+                const time = item.lastUpdatedAt?.toDate ? item.lastUpdatedAt.toDate().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }) : '';
+                
+                li.innerHTML = `
+                    <span class="flex-shrink-0 w-8 h-8 flex items-center justify-center bg-blue-100 rounded-full">
+                        <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+                    </span>
+                    <div class="flex-1 min-w-0">
+                        <p class="text-sm text-gray-700">
+                            <span class="font-medium">${adminName}</span> ${actionText} transaksi 
+                            <span class="font-medium">${playerName}</span>.
+                        </p>
+                        <p class="text-xs text-gray-400">${time}</p>
+                    </div>
+                `;
+                list.appendChild(li);
             });
-        });
+        }
 
-        // Logika buka/tutup sidebar mobile
-        const sidebar = document.getElementById('sidebar');
-        const overlay = document.getElementById('sidebar-overlay');
-        const menuBtn = document.getElementById('menu-toggle-btn');
+        // Panggil inisialisasi
+        initializeAuth();
         
-        const openSidebar = () => {
-            sidebar.classList.remove('-translate-x-full');
-            overlay.classList.remove('hidden');
-        };
-
-        const closeSidebar = () => {
-            sidebar.classList.add('-translate-x-full');
-            overlay.classList.add('hidden');
-        };
-
-        menuBtn.addEventListener('click', openSidebar);
-        overlay.addEventListener('click', closeSidebar);
-
-        // Tambahkan CSS untuk link navigasi
-        const styleSheet = document.createElement("style");
-        styleSheet.type = "text/css";
-        styleSheet.innerText = `
-            .nav-link {
-                display: flex;
-                align-items: center;
-                padding: 12px 24px;
-                margin: 4px 8px;
-                border-radius: 8px;
-                font-weight: 500;
-                color: #4B5563; /* text-gray-600 */
-                transition: all 0.2s;
-            }
-            .nav-link:hover {
-                background-color: #F3F4F6; /* bg-gray-100 */
-                color: #1F2937; /* text-gray-800 */
-            }
-            .nav-link.active {
-                background-color: #DBEAFE; /* bg-blue-100 */
-                color: #1D4ED8; /* text-blue-700 */
-                font-weight: 600;
-            }
-            .nav-link svg {
-                margin-right: 12px;
-            }
-        `;
-        document.head.appendChild(styleSheet);
-
     </script>
 </body>
 </html>
