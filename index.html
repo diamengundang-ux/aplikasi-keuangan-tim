@@ -597,7 +597,7 @@
         });
 
         function openModalForCreate() {
-            currentEditingId = null;
+            currentEditingId = null; // Pastikan ini null saat buat baru
             transactionForm.reset();
             modalTitle.textContent = 'Tambah Pemasukan Baru';
             saveTransactionBtn.textContent = 'Simpan Transaksi';
@@ -607,12 +607,42 @@
         }
         
         // (Fitur Edit bisa ditambahkan di sini nanti)
-        // function openModalForEdit(item) { ... }
+        // ===== FUNGSI BARU UNTUK EDIT =====
+        window.openModalForEdit = (id) => {
+            if (!id) return;
+            const item = allTransactions.find(tx => tx.id === id);
+            if (!item) {
+                console.error("Item tidak ditemukan:", id);
+                return;
+            }
+
+            // Set ID untuk mode edit
+            currentEditingId = item.id;
+
+            // Isi form dengan data yang ada
+            document.getElementById('playerName').value = item.playerName || '';
+            // Format angka kembali ke format input
+            document.getElementById('amount').value = item.amount.toLocaleString('id-ID');
+            document.getElementById('paymentType').value = item.paymentType;
+            document.getElementById('notes').value = item.notes || '';
+
+            // Ubah tampilan modal
+            modalTitle.textContent = 'Edit Transaksi';
+            saveTransactionBtn.textContent = 'Simpan Perubahan';
+            
+            // Tampilkan info (admin yang mengedit adalah admin saat ini)
+            const timestamp = item.lastUpdatedAt?.toDate ? item.lastUpdatedAt.toDate().toLocaleString('id-ID', { dateStyle: 'short', timeStyle: 'short' }) : 'N/A';
+            modalTimestamp.textContent = `(Data terakhir diupdate: ${timestamp})`;
+            modalAdminName.textContent = currentAdmin.name; // Admin yang sedang login
+
+            // Tampilkan modal
+            transactionModal.classList.remove('hidden');
+        }
 
         function closeModal() {
             transactionModal.classList.add('hidden');
             transactionForm.reset();
-            currentEditingId = null;
+            currentEditingId = null; // Reset ID saat modal ditutup
         }
 
         addTransactionBtnMain.addEventListener('click', openModalForCreate);
@@ -645,12 +675,12 @@
 
             try {
                 if (currentEditingId) {
-                    // Logic untuk Update (Edit)
+                    // ===== LOGIKA UPDATE (EDIT) =====
                     const docRef = doc(db, transactionsCollectionPath, currentEditingId);
                     await updateDoc(docRef, formData);
                     console.log("Data berhasil diupdate!");
                 } else {
-                    // Logic untuk Create (Tambah Baru)
+                    // ===== LOGIKA CREATE (TAMBAH BARU) =====
                     // Tambahkan field data dibuat
                     formData.createdAt = serverTimestamp();
                     formData.createdByAdminId = currentAdmin.uid;
@@ -891,6 +921,7 @@
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">${adminName}</td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 truncate max-w-xs" title="${notes}">${notes}</td>
                     <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                        <button onclick="openModalForEdit('${item.id}')" class="text-indigo-600 hover:text-indigo-900 mr-4">Edit</button>
                         <button onclick="showDeleteModal('${item.id}', '${playerName.replace(/'/g, "\\'")}')" class="text-red-600 hover:text-red-900 transition-colors duration-150">Hapus</button>
                     </td>
                 `;
@@ -943,6 +974,7 @@
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">${adminName}</td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 truncate max-w-xs" title="${notes}">${notes}</td>
                     <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                        <button onclick="openModalForEdit('${item.id}')" class="text-indigo-600 hover:text-indigo-900 mr-4">Edit</button>
                         <button onclick="showDeleteModal('${item.id}', '${playerName.replace(/'/g, "\\'")}')" class="text-red-600 hover:text-red-900 transition-colors duration-150">Hapus</button>
                     </td>
                 `;
