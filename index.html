@@ -335,9 +335,8 @@
     <script type="module">
         // Firebase SDK
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        // Baris yang rusak di bawah ini akan dihapus
-        // Ganti import di atas dengan baris di bawah ini
-        import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        // PERBAIKAN: Menambahkan 'signInAnonymously' ke import
+        import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut, signInWithCustomToken, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, doc, getDoc, addDoc, setDoc, updateDoc, deleteDoc, onSnapshot, collection, query, where, getDocs, orderBy, serverTimestamp, setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         // =============================================
@@ -351,7 +350,7 @@
           projectId: "fit-fc",
           storageBucket: "fit-fc.firebasestorage.app",
           messagingSenderId: "914814128199",
-          appId: "1:914814128199:web:0b78197c2b176d56a4a162",
+        d: "1:914814128199:web:0b78197c2b176d56a4a162",
           measurementId: "G-DHEJH8EHHQ"
         };
         
