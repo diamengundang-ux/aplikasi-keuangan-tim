@@ -54,7 +54,7 @@
         <!-- Sidebar -->
         <aside class="w-64 bg-gray-900 text-gray-300 flex flex-col fixed inset-y-0 left-0 z-30 transform -translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out" id="sidebar">
             <div class="h-16 flex items-center justify-between px-6 bg-gray-900 border-b border-gray-800">
-                <span class="text-2xl font-bold text-white">TimKeuangan</span>
+                <span class="text-2xl font-bold text-white">Tim Keuangan</span>
                 <button id="close-sidebar-btn" class="md:hidden p-1 text-gray-400 hover:text-white rounded-full focus:outline-none focus:ring-2 focus:ring-white">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                 </button>
@@ -66,7 +66,12 @@
                 </a>
                 <a href="#" id="nav-history" class="flex items-center px-4 py-3 rounded-lg text-gray-300 hover:bg-gray-700 hover:text-white transition-colors duration-200">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                    <span class="ml-3 font-medium">Riwayat Transaksi</span>
+                    <span class="ml-3 font-medium">Riwayat Pemasukan</span>
+                </a>
+                <!-- Menu Baru: Riwayat Pengeluaran -->
+                <a href="#" id="nav-expense-history" class="flex items-center px-4 py-3 rounded-lg text-gray-300 hover:bg-gray-700 hover:text-white transition-colors duration-200">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    <span class="ml-3 font-medium">Riwayat Pengeluaran</span>
                 </a>
             </nav>
             <div class="px-4 py-4 border-t border-gray-800">
@@ -83,7 +88,7 @@
                 <button id="open-sidebar-btn" class="p-1 text-gray-600 hover:text-gray-900 rounded-full focus:outline-none focus:ring-2 focus:ring-gray-400">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
                 </button>
-                <span class="text-xl font-bold text-gray-800">Tim Keuangan</span>
+                <span class="text-xl font-bold text-gray-800">TimKeuangan</span>
                 <div class="w-6"></div>
             </header>
 
@@ -92,15 +97,14 @@
                     
                     <!-- ===== Dashboard View ===== -->
                     <div id="dashboard-view" class="">
+                        <!-- ... (Dashboard Content remains same) ... -->
                         <div class="flex flex-col md:flex-row md:items-center justify-between mb-6 space-y-4 md:space-y-0">
                             <h1 class="text-3xl font-bold text-gray-900">Dashboard</h1>
                             <div class="flex space-x-3">
-                                <!-- Tombol Pengeluaran (Merah) -->
                                 <button id="add-expense-btn-main" class="flex items-center px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-medium rounded-lg shadow-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-colors duration-200">
                                     <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                                     Catat Pengeluaran
                                 </button>
-                                <!-- Tombol Pemasukan (Biru) -->
                                 <button id="add-transaction-btn-main" class="flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors duration-200">
                                     <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
                                     Tambah Pemasukan
@@ -108,24 +112,19 @@
                             </div>
                         </div>
 
-                        <!-- Stats Cards Update -->
                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
-                            <!-- Card Pemasukan -->
                             <div class="p-6 bg-white rounded-lg shadow-lg border-l-4 border-blue-500">
                                 <h4 class="text-sm font-medium text-gray-500">Total Pemasukan</h4>
                                 <p id="total-revenue" class="mt-2 text-2xl font-bold text-gray-900">Rp 0</p>
                             </div>
-                            <!-- Card Pengeluaran (Baru) -->
                             <div class="p-6 bg-white rounded-lg shadow-lg border-l-4 border-red-500">
                                 <h4 class="text-sm font-medium text-gray-500">Total Pengeluaran</h4>
                                 <p id="total-expense" class="mt-2 text-2xl font-bold text-red-600">Rp 0</p>
                             </div>
-                            <!-- Card Saldo (Baru) -->
                             <div class="p-6 bg-white rounded-lg shadow-lg border-l-4 border-green-500">
                                 <h4 class="text-sm font-medium text-gray-500">Sisa Saldo Kas</h4>
                                 <p id="net-balance" class="mt-2 text-2xl font-bold text-green-600">Rp 0</p>
                             </div>
-                            <!-- Card Statistik -->
                             <div class="p-6 bg-white rounded-lg shadow-lg border-l-4 border-gray-500">
                                 <h4 class="text-sm font-medium text-gray-500">Total Transaksi</h4>
                                 <p id="total-transactions" class="mt-2 text-2xl font-bold text-gray-900">0</p>
@@ -133,12 +132,10 @@
                         </div>
 
                         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
-                            <!-- Chart Arus Keuangan (Baru) -->
                             <div class="lg:col-span-2 p-6 bg-white rounded-lg shadow-lg">
                                 <h3 class="text-lg font-semibold text-gray-800 mb-4">Arus Keuangan</h3>
                                 <div class="h-64 md:h-80"><canvas id="cash-flow-chart"></canvas></div>
                             </div>
-                            <!-- Chart Jenis Pemasukan (Dipindah) -->
                             <div class="p-6 bg-white rounded-lg shadow-lg">
                                 <h3 class="text-lg font-semibold text-gray-800 mb-4">Jenis Pemasukan</h3>
                                 <div class="h-64"><canvas id="payment-chart"></canvas></div>
@@ -146,7 +143,6 @@
                         </div>
 
                         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
-                             <!-- Recent Activity -->
                              <div class="p-6 bg-white rounded-lg shadow-lg">
                                 <h3 class="text-lg font-semibold text-gray-800 mb-4">Aktivitas Admin Terbaru</h3>
                                 <ul id="recent-activity-list" class="space-y-4 max-h-96 overflow-y-auto">
@@ -154,7 +150,6 @@
                                 </ul>
                             </div>
 
-                            <!-- Transaksi Terbaru Table -->
                             <div class="lg:col-span-2 bg-white rounded-lg shadow-lg overflow-hidden">
                                 <h3 class="px-6 py-4 text-lg font-semibold text-gray-800 border-b border-gray-200">5 Pemasukan Terakhir</h3>
                                 <div class="overflow-x-auto">
@@ -176,10 +171,10 @@
                         </div>
                     </div>
 
-                    <!-- ===== History View ===== -->
+                    <!-- ===== History View (Income) ===== -->
                     <div id="history-view" class="hidden">
                         <div class="bg-white rounded-lg shadow-lg">
-                            <h3 class="px-6 py-4 text-lg font-semibold text-gray-800 border-b border-gray-200">Riwayat Semua Transaksi (Pemasukan)</h3>
+                            <h3 class="px-6 py-4 text-lg font-semibold text-gray-800 border-b border-gray-200">Riwayat Pemasukan</h3>
                             
                             <div class="px-6 py-4">
                                 <input id="history-search" type="text" placeholder="Cari berdasarkan nama pemain..." class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200">
@@ -220,6 +215,48 @@
                         </div>
                     </div>
 
+                    <!-- ===== Expense History View (New) ===== -->
+                    <div id="expense-history-view" class="hidden">
+                        <div class="bg-white rounded-lg shadow-lg">
+                            <h3 class="px-6 py-4 text-lg font-semibold text-gray-800 border-b border-gray-200">Riwayat Pengeluaran</h3>
+                            
+                            <div class="px-6 py-4">
+                                <input id="expense-history-search" type="text" placeholder="Cari berdasarkan keterangan..." class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 transition-colors duration-200">
+                            </div>
+
+                            <div class="overflow-x-auto">
+                                <table class="min-w-full divide-y divide-gray-200">
+                                    <thead class="bg-gray-50">
+                                        <tr>
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                <input type="checkbox" id="expense-select-all-checkbox" class="rounded border-gray-300 text-red-600 shadow-sm focus:border-red-300 focus:ring focus:ring-red-200 focus:ring-opacity-50">
+                                            </th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tanggal/Jam</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Keperluan</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nominal</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Admin</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="expense-history-list-tbody" class="bg-white divide-y divide-gray-200"></tbody>
+                                </table>
+                            </div>
+
+                            <div class="px-6 py-4 border-t border-gray-200 flex flex-col md:flex-row items-center justify-between gap-4">
+                                <div id="expense-bulk-action-container" class="hidden flex items-center space-x-3">
+                                    <span id="expense-selected-count" class="text-sm text-gray-600">0 terpilih</span>
+                                    <button id="expense-bulk-delete-btn" class="px-4 py-2 bg-red-600 text-white rounded-lg text-sm font-medium hover:bg-red-700 transition-colors duration-150">Hapus Terpilih</button>
+                                </div>
+                                
+                                <div class="flex items-center justify-between w-full md:w-auto space-x-2">
+                                    <button id="expense-history-prev-btn" class="px-4 py-2 bg-white border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-150">&larr; Sebelumnya</button>
+                                    <span id="expense-history-page-info" class="text-sm text-gray-600">Hal. 1 dari 1</span>
+                                    <button id="expense-history-next-btn" class="px-4 py-2 bg-white border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-150">Berikutnya &rarr;</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </main>
@@ -250,12 +287,12 @@
         </div>
     </div>
 
-    <!-- Expense Modal (New) -->
+    <!-- Expense Modal -->
     <div id="expense-modal" class="fixed inset-0 z-40 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm hidden overflow-y-auto p-4">
         <div class="bg-white rounded-lg shadow-xl w-full max-w-lg m-auto border-t-4 border-red-600">
             <form id="expense-form">
                 <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
-                    <h3 class="text-xl font-bold text-red-700">Catat Pengeluaran</h3>
+                    <h3 id="expense-modal-title" class="text-xl font-bold text-red-700">Catat Pengeluaran</h3>
                     <button type="button" id="close-expense-modal-btn-x" class="p-1 text-gray-400 hover:text-gray-700 rounded-full focus:outline-none focus:ring-2 focus:ring-gray-400">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                     </button>
@@ -312,16 +349,23 @@
         // Global variables
         let currentAdmin = null;
         let allTransactions = [];
-        let allExpenses = []; // Store expenses
+        let allExpenses = [];
         let transactionsListener = null;
         let expensesListener = null;
         let transactionChart = null;
-        let cashFlowChart = null; // New chart
+        let cashFlowChart = null;
+        
         let currentEditingId = null;
+        let currentEditingExpenseId = null; // New for expense edit
         let currentDeleteId = null;
+        let deleteCollection = ''; // New to track which collection to delete from
+
         let currentHistoryPage = 1;
+        let currentExpensePage = 1; // New for expense pagination
         const ITEMS_PER_PAGE = 10;
+        
         let selectedTransactionIds = new Set();
+        let selectedExpenseIds = new Set(); // New for expense bulk delete
 
         // DOM Elements Getter
         const get = (id) => document.getElementById(id);
@@ -340,10 +384,13 @@
         const adminEmailDisplay = get('admin-email-display');
         const dashboardView = get('dashboard-view');
         const historyView = get('history-view');
+        const expenseHistoryView = get('expense-history-view'); // New
+        
         const navDashboard = get('nav-dashboard');
         const navHistory = get('nav-history');
+        const navExpenseHistory = get('nav-expense-history'); // New
         
-        // Transaction Modal (Income)
+        // Transaction Modal
         const transactionModal = get('transaction-modal');
         const transactionForm = get('transaction-form');
         const modalTitle = get('modal-title');
@@ -352,6 +399,7 @@
         // Expense Modal
         const expenseModal = get('expense-modal');
         const expenseForm = get('expense-form');
+        const expenseModalTitle = get('expense-modal-title'); // New
         const saveExpenseBtn = get('save-expense-btn');
 
         // Delete Modal
@@ -374,7 +422,7 @@
                 adminNameDisplay.textContent = currentAdmin.name;
                 adminEmailDisplay.textContent = currentAdmin.email;
                 setupTransactionListener();
-                setupExpenseListener(); // Listener baru untuk pengeluaran
+                setupExpenseListener();
             } else {
                 appContainer.classList.add('hidden');
                 loginOverlay.classList.remove('hidden');
@@ -395,21 +443,31 @@
 
         // --- NAVIGATION ---
         const showView = (view) => {
-            dashboardView.classList.add('hidden'); historyView.classList.add('hidden');
+            dashboardView.classList.add('hidden');
+            historyView.classList.add('hidden');
+            expenseHistoryView.classList.add('hidden');
+            
             navDashboard.classList.remove('bg-gray-700', 'text-white'); navDashboard.classList.add('text-gray-300');
             navHistory.classList.remove('bg-gray-700', 'text-white'); navHistory.classList.add('text-gray-300');
+            navExpenseHistory.classList.remove('bg-gray-700', 'text-white'); navExpenseHistory.classList.add('text-gray-300');
             
             if (view === 'dashboard') {
                 dashboardView.classList.remove('hidden');
                 navDashboard.classList.add('bg-gray-700', 'text-white');
-            } else {
+            } else if (view === 'history') {
                 historyView.classList.remove('hidden');
                 navHistory.classList.add('bg-gray-700', 'text-white');
                 currentHistoryPage = 1; renderHistoryList(allTransactions, get('history-search').value);
+            } else if (view === 'expense-history') {
+                expenseHistoryView.classList.remove('hidden');
+                navExpenseHistory.classList.add('bg-gray-700', 'text-white');
+                currentExpensePage = 1; renderExpenseHistoryList(allExpenses, get('expense-history-search').value);
             }
         };
         navDashboard.addEventListener('click', (e) => { e.preventDefault(); showView('dashboard'); });
         navHistory.addEventListener('click', (e) => { e.preventDefault(); showView('history'); });
+        navExpenseHistory.addEventListener('click', (e) => { e.preventDefault(); showView('expense-history'); });
+        
         get('open-sidebar-btn').addEventListener('click', () => sidebar.classList.remove('-translate-x-full'));
         get('close-sidebar-btn').addEventListener('click', () => sidebar.classList.add('-translate-x-full'));
 
@@ -424,16 +482,15 @@
         }
 
         function setupExpenseListener() {
-            // Koleksi baru untuk pengeluaran
             const q = query(collection(db, `artifacts/${appId}/public/data/expenses`), orderBy('date', 'desc'));
             expensesListener = onSnapshot(q, (snapshot) => {
                 allExpenses = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                 refreshDashboard();
+                renderExpenseHistoryList(allExpenses, get('expense-history-search').value);
             });
         }
 
         function refreshDashboard() {
-            // Hitung total
             const totalIncome = allTransactions.reduce((s, i) => s + (i.amount || 0), 0);
             const totalExpense = allExpenses.reduce((s, i) => s + (i.amount || 0), 0);
             const balance = totalIncome - totalExpense;
@@ -444,8 +501,7 @@
             get('total-transactions').textContent = allTransactions.length;
             
             updatePaymentChart(allTransactions);
-            // UPDATE: Kirim data mentah (array), bukan total, agar bisa diolah per tanggal
-            updateCashFlowChart(allTransactions, allExpenses); 
+            updateCashFlowChart(allTransactions, allExpenses);
             updateRecentActivity(allTransactions); 
             renderDashboardTable(allTransactions);
         }
@@ -462,147 +518,51 @@
             else transactionChart = new Chart(ctx, { type: 'doughnut', data: chartData, options: { responsive: true, maintainAspectRatio: false } });
         }
 
-        // FUNGSI BARU: Modern Area Chart (Trend per Tanggal)
         function updateCashFlowChart(transactions, expenses) {
             const ctx = get('cash-flow-chart').getContext('2d');
-            
-            // 1. Buat Peta Data berdasarkan Tanggal
             const rawMap = {};
-            
-            // Helper untuk memasukkan data ke map
             const processData = (list, type) => {
                 list.forEach(item => {
                     let d = null;
-                    // Cek berbagai kemungkinan nama field tanggal
                     if (item.date && item.date.toDate) d = item.date.toDate();
                     else if (item.lastUpdatedAt && item.lastUpdatedAt.toDate) d = item.lastUpdatedAt.toDate();
                     else if (item.createdAt && item.createdAt.toDate) d = item.createdAt.toDate();
                     
                     if (d) {
-                        // Kunci tanggal (tanpa jam) untuk pengelompokan
                         const key = new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime();
                         if (!rawMap[key]) rawMap[key] = { income: 0, expense: 0, dateObj: d };
                         rawMap[key][type] += (item.amount || 0);
                     }
                 });
             };
-
             processData(transactions, 'income');
             processData(expenses, 'expense');
 
-            // 2. Urutkan Tanggal dari Lama ke Baru
             const sortedKeys = Object.keys(rawMap).sort();
-            
-            // 3. Siapkan Array untuk Chart
-            const labels = sortedKeys.map(k => rawMap[k].dateObj.toLocaleDateString('id-ID', { day: 'numeric', month: 'short' })); // Contoh: 25 Nov
+            const labels = sortedKeys.map(k => rawMap[k].dateObj.toLocaleDateString('id-ID', { day: 'numeric', month: 'short' }));
             const incomeData = sortedKeys.map(k => rawMap[k].income);
             const expenseData = sortedKeys.map(k => rawMap[k].expense);
 
-            // 4. Buat Gradasi Warna (Efek Modern)
             const gradientIncome = ctx.createLinearGradient(0, 0, 0, 300);
-            gradientIncome.addColorStop(0, 'rgba(59, 130, 246, 0.4)'); // Biru Pudar
-            gradientIncome.addColorStop(1, 'rgba(59, 130, 246, 0.0)'); // Transparan
-
+            gradientIncome.addColorStop(0, 'rgba(59, 130, 246, 0.4)'); gradientIncome.addColorStop(1, 'rgba(59, 130, 246, 0.0)');
             const gradientExpense = ctx.createLinearGradient(0, 0, 0, 300);
-            gradientExpense.addColorStop(0, 'rgba(239, 68, 68, 0.4)'); // Merah Pudar
-            gradientExpense.addColorStop(1, 'rgba(239, 68, 68, 0.0)'); // Transparan
+            gradientExpense.addColorStop(0, 'rgba(239, 68, 68, 0.4)'); gradientExpense.addColorStop(1, 'rgba(239, 68, 68, 0.0)');
 
             const chartData = {
                 labels: labels,
                 datasets: [
-                    {
-                        label: 'Pemasukan',
-                        data: incomeData,
-                        borderColor: '#3B82F6', // Biru Solid
-                        backgroundColor: gradientIncome,
-                        borderWidth: 3,
-                        tension: 0.4, // Membuat garis melengkung halus (Spline)
-                        fill: true,   // Isi warna di bawah garis
-                        pointBackgroundColor: '#fff',
-                        pointBorderColor: '#3B82F6',
-                        pointBorderWidth: 2,
-                        pointRadius: 4,
-                        pointHoverRadius: 6
-                    },
-                    {
-                        label: 'Pengeluaran',
-                        data: expenseData,
-                        borderColor: '#EF4444', // Merah Solid
-                        backgroundColor: gradientExpense,
-                        borderWidth: 3,
-                        tension: 0.4,
-                        fill: true,
-                        pointBackgroundColor: '#fff',
-                        pointBorderColor: '#EF4444',
-                        pointBorderWidth: 2,
-                        pointRadius: 4,
-                        pointHoverRadius: 6
-                    }
+                    { label: 'Pemasukan', data: incomeData, borderColor: '#3B82F6', backgroundColor: gradientIncome, borderWidth: 3, tension: 0.4, fill: true, pointBackgroundColor: '#fff', pointBorderColor: '#3B82F6', pointBorderWidth: 2, pointRadius: 4 },
+                    { label: 'Pengeluaran', data: expenseData, borderColor: '#EF4444', backgroundColor: gradientExpense, borderWidth: 3, tension: 0.4, fill: true, pointBackgroundColor: '#fff', pointBorderColor: '#EF4444', pointBorderWidth: 2, pointRadius: 4 }
                 ]
             };
 
-            // 5. Render Chart
-            if (cashFlowChart) {
-                cashFlowChart.destroy(); // Hancurkan chart lama untuk ganti tipe
-            }
-            
+            if (cashFlowChart) { cashFlowChart.destroy(); }
             cashFlowChart = new Chart(ctx, {
-                type: 'line', // Ubah jadi Line chart
-                data: chartData,
+                type: 'line', data: chartData,
                 options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    interaction: {
-                        mode: 'index',
-                        intersect: false,
-                    },
-                    plugins: {
-                        legend: {
-                            position: 'top',
-                            align: 'end',
-                            labels: { usePointStyle: true, boxWidth: 8 }
-                        },
-                        tooltip: {
-                            backgroundColor: 'rgba(255, 255, 255, 0.9)',
-                            titleColor: '#1f2937',
-                            bodyColor: '#1f2937',
-                            borderColor: '#e5e7eb',
-                            borderWidth: 1,
-                            padding: 10,
-                            callbacks: {
-                                label: function(context) {
-                                    let label = context.dataset.label || '';
-                                    if (label) label += ': ';
-                                    if (context.parsed.y !== null) {
-                                        label += new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(context.parsed.y);
-                                    }
-                                    return label;
-                                }
-                            }
-                        }
-                    },
-                    scales: {
-                        x: {
-                            grid: { display: false }, // Hilangkan grid vertikal agar bersih
-                            ticks: { color: '#9ca3af' }
-                        },
-                        y: {
-                            beginAtZero: true,
-                            border: { display: false }, // Hilangkan garis border Y
-                            grid: {
-                                color: '#f3f4f6',
-                                borderDash: [5, 5] // Grid putus-putus halus
-                            },
-                            ticks: {
-                                color: '#9ca3af',
-                                callback: function(value) {
-                                    if(value >= 1000000) return (value/1000000) + 'jt';
-                                    if(value >= 1000) return (value/1000) + 'rb';
-                                    return value;
-                                }
-                            }
-                        }
-                    }
+                    responsive: true, maintainAspectRatio: false, interaction: { mode: 'index', intersect: false },
+                    plugins: { legend: { position: 'top', align: 'end', labels: { usePointStyle: true, boxWidth: 8 } } },
+                    scales: { x: { grid: { display: false }, ticks: { color: '#9ca3af' } }, y: { beginAtZero: true, border: { display: false }, grid: { color: '#f3f4f6', borderDash: [5, 5] }, ticks: { color: '#9ca3af', callback: function(value) { if(value >= 1000000) return (value/1000000) + 'jt'; if(value >= 1000) return (value/1000) + 'rb'; return value; } } } }
                 }
             });
         }
@@ -612,7 +572,6 @@
         get('amount').addEventListener('input', formatInput);
         get('expenseAmount').addEventListener('input', formatInput);
 
-        // Income Modal Functions
         get('add-transaction-btn-main').addEventListener('click', () => {
             currentEditingId = null; transactionForm.reset();
             modalTitle.textContent = 'Tambah Pemasukan Baru'; saveTransactionBtn.textContent = 'Simpan Transaksi';
@@ -664,7 +623,8 @@
 
         // --- MODALS & FORMS (EXPENSE) ---
         get('add-expense-btn-main').addEventListener('click', () => {
-            expenseForm.reset();
+            currentEditingExpenseId = null; expenseForm.reset();
+            expenseModalTitle.textContent = 'Catat Pengeluaran'; saveExpenseBtn.textContent = 'Simpan Pengeluaran';
             get('expense-modal-timestamp').textContent = new Date().toLocaleString('id-ID');
             get('expense-modal-admin-name').textContent = currentAdmin.name;
             expenseModal.classList.remove('hidden');
@@ -672,6 +632,16 @@
         const closeExpenseModal = () => expenseModal.classList.add('hidden');
         get('close-expense-modal-btn-x').addEventListener('click', closeExpenseModal);
         get('close-expense-modal-footer').addEventListener('click', closeExpenseModal);
+
+        window.openModalForEditExpense = (id) => {
+            const item = allExpenses.find(ex => ex.id === id);
+            if (!item) return;
+            currentEditingExpenseId = id;
+            get('expenseDescription').value = item.description;
+            get('expenseAmount').value = (item.amount || 0).toLocaleString('id-ID');
+            expenseModalTitle.textContent = 'Edit Pengeluaran'; saveExpenseBtn.textContent = 'Simpan Perubahan';
+            expenseModal.classList.remove('hidden');
+        };
 
         expenseForm.addEventListener('submit', async (e) => {
             e.preventDefault(); saveExpenseBtn.disabled = true;
@@ -684,19 +654,22 @@
                 recordedByAdminName: currentAdmin.name
             };
             try {
-                await addDoc(collection(db, `artifacts/${appId}/public/data/expenses`), data);
+                const col = `artifacts/${appId}/public/data/expenses`;
+                if (currentEditingExpenseId) await updateDoc(doc(db, col, currentEditingExpenseId), data);
+                else await addDoc(collection(db, col), data);
                 closeExpenseModal();
             } catch (err) { console.error(err); alert("Gagal simpan pengeluaran."); }
             finally { saveExpenseBtn.disabled = false; }
         });
 
         // --- DELETE ---
-        window.showDeleteModal = (id, name) => {
+        window.showDeleteModal = (id, name, type = 'transaction') => {
             currentDeleteId = id;
+            deleteCollection = type === 'expense' ? 'expenses' : 'transactions';
             get('delete-modal-text').textContent = `Hapus "${name}"?`;
             confirmDeleteBtn.onclick = async () => {
                 try {
-                    await deleteDoc(doc(db, `artifacts/${appId}/public/data/transactions`, currentDeleteId));
+                    await deleteDoc(doc(db, `artifacts/${appId}/public/data/${deleteCollection}`, currentDeleteId));
                     deleteConfirmModal.classList.add('hidden');
                 } catch (err) { console.error(err); }
             };
@@ -704,7 +677,7 @@
         };
         get('cancel-delete-btn').addEventListener('click', () => deleteConfirmModal.classList.add('hidden'));
 
-        // --- BULK DELETE (History) ---
+        // --- BULK DELETE ---
         const updateBulkUI = () => {
             if (selectedTransactionIds.size > 0) {
                 get('bulk-action-container').classList.remove('hidden');
@@ -714,23 +687,54 @@
                 if(get('select-all-checkbox')) get('select-all-checkbox').checked = false;
             }
         };
+        
+        const updateExpenseBulkUI = () => {
+            if (selectedExpenseIds.size > 0) {
+                get('expense-bulk-action-container').classList.remove('hidden');
+                get('expense-selected-count').textContent = `${selectedExpenseIds.size} terpilih`;
+            } else {
+                get('expense-bulk-action-container').classList.add('hidden');
+                if(get('expense-select-all-checkbox')) get('expense-select-all-checkbox').checked = false;
+            }
+        };
+
         if (get('select-all-checkbox')) {
             get('select-all-checkbox').addEventListener('change', (e) => {
                 document.querySelectorAll('.tx-checkbox').forEach(cb => {
                     cb.checked = e.target.checked;
-                    if(e.target.checked) selectedTransactionIds.add(cb.value);
-                    else selectedTransactionIds.delete(cb.value);
+                    if(e.target.checked) selectedTransactionIds.add(cb.value); else selectedTransactionIds.delete(cb.value);
                 });
                 updateBulkUI();
             });
         }
+        if (get('expense-select-all-checkbox')) {
+            get('expense-select-all-checkbox').addEventListener('change', (e) => {
+                document.querySelectorAll('.ex-checkbox').forEach(cb => {
+                    cb.checked = e.target.checked;
+                    if(e.target.checked) selectedExpenseIds.add(cb.value); else selectedExpenseIds.delete(cb.value);
+                });
+                updateExpenseBulkUI();
+            });
+        }
+
         if (get('bulk-delete-btn')) {
             get('bulk-delete-btn').addEventListener('click', () => {
                 get('delete-modal-text').textContent = `Hapus ${selectedTransactionIds.size} data?`;
                 confirmDeleteBtn.onclick = async () => {
                     const promises = Array.from(selectedTransactionIds).map(id => deleteDoc(doc(db, `artifacts/${appId}/public/data/transactions`, id)));
-                    await Promise.all(promises);
-                    selectedTransactionIds.clear(); updateBulkUI();
+                    await Promise.all(promises); selectedTransactionIds.clear(); updateBulkUI();
+                    deleteConfirmModal.classList.add('hidden');
+                };
+                deleteConfirmModal.classList.remove('hidden');
+            });
+        }
+        
+        if (get('expense-bulk-delete-btn')) {
+            get('expense-bulk-delete-btn').addEventListener('click', () => {
+                get('delete-modal-text').textContent = `Hapus ${selectedExpenseIds.size} pengeluaran?`;
+                confirmDeleteBtn.onclick = async () => {
+                    const promises = Array.from(selectedExpenseIds).map(id => deleteDoc(doc(db, `artifacts/${appId}/public/data/expenses`, id)));
+                    await Promise.all(promises); selectedExpenseIds.clear(); updateExpenseBulkUI();
                     deleteConfirmModal.classList.add('hidden');
                 };
                 deleteConfirmModal.classList.remove('hidden');
@@ -769,7 +773,7 @@
                     <td class="px-6 py-4 text-sm text-gray-500 truncate max-w-xs">${item.notes}</td>
                     <td class="px-6 py-4 text-right text-sm">
                         <button onclick="openModalForEdit('${item.id}')" class="text-indigo-600 mr-3">Edit</button>
-                        <button onclick="showDeleteModal('${item.id}', '${item.playerName}')" class="text-red-600">Hapus</button>
+                        <button onclick="showDeleteModal('${item.id}', '${item.playerName}', 'transaction')" class="text-red-600">Hapus</button>
                     </td>`;
                 tr.querySelector('.tx-checkbox').addEventListener('change', (e) => {
                     if(e.target.checked) selectedTransactionIds.add(item.id); else selectedTransactionIds.delete(item.id);
@@ -783,6 +787,52 @@
         get('history-next-btn').addEventListener('click', () => { 
             const filtered = allTransactions.filter(i => (i.playerName||'').toLowerCase().includes(get('history-search').value.toLowerCase()));
             if(currentHistoryPage < Math.ceil(filtered.length/ITEMS_PER_PAGE)) { currentHistoryPage++; renderHistoryList(allTransactions, get('history-search').value); }
+        });
+
+        // --- RENDER EXPENSE LIST ---
+        function renderExpenseHistoryList(data, filter) {
+            const list = get('expense-history-list-tbody'); list.innerHTML = '';
+            if(filter) { selectedExpenseIds.clear(); updateExpenseBulkUI(); }
+            
+            const filtered = data.filter(i => (i.description||'').toLowerCase().includes(filter.toLowerCase()));
+            const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE) || 1;
+            if (currentExpensePage > totalPages) currentExpensePage = totalPages;
+            
+            const start = (currentExpensePage - 1) * ITEMS_PER_PAGE;
+            const pageData = filtered.slice(start, start + ITEMS_PER_PAGE);
+            
+            get('expense-history-page-info').textContent = `Hal. ${currentExpensePage} dari ${totalPages}`;
+            get('expense-history-prev-btn').disabled = currentExpensePage === 1;
+            get('expense-history-next-btn').disabled = currentExpensePage === totalPages;
+
+            if (pageData.length === 0) { list.innerHTML = '<tr><td colspan="6" class="text-center py-4 text-gray-400">Kosong</td></tr>'; return; }
+
+            pageData.forEach(item => {
+                const tr = document.createElement('tr'); tr.className = "hover:bg-gray-50";
+                const isChecked = selectedExpenseIds.has(item.id);
+                const time = item.date?.toDate ? item.date.toDate().toLocaleString('id-ID', {dateStyle:'short', timeStyle:'short'}) : '-';
+                tr.innerHTML = `
+                    <td class="px-6 py-4"><input type="checkbox" value="${item.id}" class="ex-checkbox rounded text-red-600" ${isChecked?'checked':''}></td>
+                    <td class="px-6 py-4 text-sm text-gray-600">${time}</td>
+                    <td class="px-6 py-4 text-sm font-medium">${item.description}</td>
+                    <td class="px-6 py-4 text-sm text-red-600 font-semibold">${formatCurrency(item.amount)}</td>
+                    <td class="px-6 py-4 text-sm text-gray-600">${item.recordedByAdminName}</td>
+                    <td class="px-6 py-4 text-right text-sm">
+                        <button onclick="openModalForEditExpense('${item.id}')" class="text-indigo-600 mr-3">Edit</button>
+                        <button onclick="showDeleteModal('${item.id}', '${item.description}', 'expense')" class="text-red-600">Hapus</button>
+                    </td>`;
+                tr.querySelector('.ex-checkbox').addEventListener('change', (e) => {
+                    if(e.target.checked) selectedExpenseIds.add(item.id); else selectedExpenseIds.delete(item.id);
+                    updateExpenseBulkUI();
+                });
+                list.appendChild(tr);
+            });
+        }
+        get('expense-history-search').addEventListener('input', (e) => { currentExpensePage = 1; renderExpenseHistoryList(allExpenses, e.target.value); });
+        get('expense-history-prev-btn').addEventListener('click', () => { if(currentExpensePage > 1) { currentExpensePage--; renderExpenseHistoryList(allExpenses, get('expense-history-search').value); }});
+        get('expense-history-next-btn').addEventListener('click', () => { 
+            const filtered = allExpenses.filter(i => (i.description||'').toLowerCase().includes(get('expense-history-search').value.toLowerCase()));
+            if(currentExpensePage < Math.ceil(filtered.length/ITEMS_PER_PAGE)) { currentExpensePage++; renderExpenseHistoryList(allExpenses, get('expense-history-search').value); }
         });
 
         function updateRecentActivity(data) {
