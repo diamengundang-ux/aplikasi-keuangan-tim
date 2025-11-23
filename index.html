@@ -92,61 +92,86 @@
                     
                     <!-- ===== Dashboard View ===== -->
                     <div id="dashboard-view" class="">
-                        <div class="flex flex-col md:flex-row md:items-center justify-between mb-6">
+                        <div class="flex flex-col md:flex-row md:items-center justify-between mb-6 space-y-4 md:space-y-0">
                             <h1 class="text-3xl font-bold text-gray-900">Dashboard</h1>
-                            <button id="add-transaction-btn-main" class="mt-4 md:mt-0 flex items-center px-5 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors duration-200">
-                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
-                                Tambah Pemasukan
-                            </button>
+                            <div class="flex space-x-3">
+                                <!-- Tombol Pengeluaran (Merah) -->
+                                <button id="add-expense-btn-main" class="flex items-center px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-medium rounded-lg shadow-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-colors duration-200">
+                                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                    Catat Pengeluaran
+                                </button>
+                                <!-- Tombol Pemasukan (Biru) -->
+                                <button id="add-transaction-btn-main" class="flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors duration-200">
+                                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+                                    Tambah Pemasukan
+                                </button>
+                            </div>
                         </div>
 
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                            <div class="p-6 bg-white rounded-lg shadow-lg">
+                        <!-- Stats Cards Update -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+                            <!-- Card Pemasukan -->
+                            <div class="p-6 bg-white rounded-lg shadow-lg border-l-4 border-blue-500">
                                 <h4 class="text-sm font-medium text-gray-500">Total Pemasukan</h4>
-                                <p id="total-revenue" class="mt-2 text-3xl font-bold text-gray-900">Rp 0</p>
+                                <p id="total-revenue" class="mt-2 text-2xl font-bold text-gray-900">Rp 0</p>
                             </div>
-                            <div class="p-6 bg-white rounded-lg shadow-lg">
+                            <!-- Card Pengeluaran (Baru) -->
+                            <div class="p-6 bg-white rounded-lg shadow-lg border-l-4 border-red-500">
+                                <h4 class="text-sm font-medium text-gray-500">Total Pengeluaran</h4>
+                                <p id="total-expense" class="mt-2 text-2xl font-bold text-red-600">Rp 0</p>
+                            </div>
+                            <!-- Card Saldo (Baru) -->
+                            <div class="p-6 bg-white rounded-lg shadow-lg border-l-4 border-green-500">
+                                <h4 class="text-sm font-medium text-gray-500">Sisa Saldo Kas</h4>
+                                <p id="net-balance" class="mt-2 text-2xl font-bold text-green-600">Rp 0</p>
+                            </div>
+                            <!-- Card Statistik -->
+                            <div class="p-6 bg-white rounded-lg shadow-lg border-l-4 border-gray-500">
                                 <h4 class="text-sm font-medium text-gray-500">Total Transaksi</h4>
-                                <p id="total-transactions" class="mt-2 text-3xl font-bold text-gray-900">0</p>
-                            </div>
-                            <div class="p-6 bg-white rounded-lg shadow-lg">
-                                <h4 class="text-sm font-medium text-gray-500">Pemain Terbayar</h4>
-                                <p id="unique-players" class="mt-2 text-3xl font-bold text-gray-900">0</p>
+                                <p id="total-transactions" class="mt-2 text-2xl font-bold text-gray-900">0</p>
                             </div>
                         </div>
 
                         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
+                            <!-- Chart Arus Keuangan (Baru) -->
                             <div class="lg:col-span-2 p-6 bg-white rounded-lg shadow-lg">
-                                <h3 class="text-lg font-semibold text-gray-800 mb-4">Pemasukan per Jenis</h3>
-                                <div class="h-64 md:h-80"><canvas id="payment-chart"></canvas></div>
+                                <h3 class="text-lg font-semibold text-gray-800 mb-4">Arus Keuangan</h3>
+                                <div class="h-64 md:h-80"><canvas id="cash-flow-chart"></canvas></div>
                             </div>
+                            <!-- Chart Jenis Pemasukan (Dipindah) -->
                             <div class="p-6 bg-white rounded-lg shadow-lg">
-                                <h3 class="text-lg font-semibold text-gray-800 mb-4">Aktivitas Admin Terbaru</h3>
-                                <ul id="recent-activity-list" class="space-y-4 max-h-80 overflow-y-auto">
-                                    <li class="text-center text-sm text-gray-400">Memuat data...</li>
-                                </ul>
+                                <h3 class="text-lg font-semibold text-gray-800 mb-4">Jenis Pemasukan</h3>
+                                <div class="h-64"><canvas id="payment-chart"></canvas></div>
                             </div>
                         </div>
 
-                        <div class="mt-6 bg-white rounded-lg shadow-lg overflow-hidden">
-                            <h3 class="px-6 py-4 text-lg font-semibold text-gray-800 border-b border-gray-200">Transaksi Terbaru</h3>
-                            <div class="overflow-x-auto">
-                                <table class="min-w-full divide-y divide-gray-200">
-                                    <thead class="bg-gray-50">
-                                        <tr>
-                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tanggal/Jam</th>
-                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama</th>
-                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nominal</th>
-                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Jenis</th>
-                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Admin</th>
-                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ket</th>
-                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="dashboard-recent-tx-list" class="bg-white divide-y divide-gray-200">
-                                        <tr><td colspan="7" class="px-6 py-4 text-center text-sm text-gray-400">Memuat data...</td></tr>
-                                    </tbody>
-                                </table>
+                        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
+                             <!-- Recent Activity -->
+                             <div class="p-6 bg-white rounded-lg shadow-lg">
+                                <h3 class="text-lg font-semibold text-gray-800 mb-4">Aktivitas Admin Terbaru</h3>
+                                <ul id="recent-activity-list" class="space-y-4 max-h-96 overflow-y-auto">
+                                    <li class="text-center text-sm text-gray-400">Memuat data...</li>
+                                </ul>
+                            </div>
+
+                            <!-- Transaksi Terbaru Table -->
+                            <div class="lg:col-span-2 bg-white rounded-lg shadow-lg overflow-hidden">
+                                <h3 class="px-6 py-4 text-lg font-semibold text-gray-800 border-b border-gray-200">5 Pemasukan Terakhir</h3>
+                                <div class="overflow-x-auto">
+                                    <table class="min-w-full divide-y divide-gray-200">
+                                        <thead class="bg-gray-50">
+                                            <tr>
+                                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Tanggal</th>
+                                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Nama</th>
+                                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Nominal</th>
+                                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Ket</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="dashboard-recent-tx-list" class="bg-white divide-y divide-gray-200">
+                                            <tr><td colspan="4" class="px-6 py-4 text-center text-sm text-gray-400">Memuat data...</td></tr>
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -154,7 +179,7 @@
                     <!-- ===== History View ===== -->
                     <div id="history-view" class="hidden">
                         <div class="bg-white rounded-lg shadow-lg">
-                            <h3 class="px-6 py-4 text-lg font-semibold text-gray-800 border-b border-gray-200">Riwayat Semua Transaksi</h3>
+                            <h3 class="px-6 py-4 text-lg font-semibold text-gray-800 border-b border-gray-200">Riwayat Semua Transaksi (Pemasukan)</h3>
                             
                             <div class="px-6 py-4">
                                 <input id="history-search" type="text" placeholder="Cari berdasarkan nama pemain..." class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200">
@@ -164,7 +189,6 @@
                                 <table class="min-w-full divide-y divide-gray-200">
                                     <thead class="bg-gray-50">
                                         <tr>
-                                            <!-- Checkbox Header (PENTING UNTUK FITUR HAPUS MASAL) -->
                                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                                 <input type="checkbox" id="select-all-checkbox" class="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
                                             </th>
@@ -181,9 +205,7 @@
                                 </table>
                             </div>
 
-                            <!-- Kontrol Paginasi & Bulk Action -->
                             <div class="px-6 py-4 border-t border-gray-200 flex flex-col md:flex-row items-center justify-between gap-4">
-                                <!-- Bulk Action (PENTING) -->
                                 <div id="bulk-action-container" class="hidden flex items-center space-x-3">
                                     <span id="selected-count" class="text-sm text-gray-600">0 terpilih</span>
                                     <button id="bulk-delete-btn" class="px-4 py-2 bg-red-600 text-white rounded-lg text-sm font-medium hover:bg-red-700 transition-colors duration-150">Hapus Terpilih</button>
@@ -203,7 +225,7 @@
         </main>
     </div>
 
-    <!-- Transaction Modal -->
+    <!-- Transaction Modal (Income) -->
     <div id="transaction-modal" class="fixed inset-0 z-40 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm hidden overflow-y-auto p-4">
         <div class="bg-white rounded-lg shadow-xl w-full max-w-lg m-auto">
             <form id="transaction-form">
@@ -222,7 +244,30 @@
                 </div>
                 <div class="px-6 py-4 bg-gray-50 rounded-b-lg flex justify-end space-x-3">
                     <button type="button" id="close-modal-btn-footer" class="px-4 py-2 bg-white border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-400">Batal</button>
-                    <button type="submit" id="save-transaction-btn" class="px-4 py-2 bg-blue-600 border border-transparent rounded-lg text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">Simpan Transaksi</button>
+                    <button type="submit" id="save-transaction-btn" class="px-4 py-2 bg-blue-600 border border-transparent rounded-lg text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">Simpan Pemasukan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Expense Modal (New) -->
+    <div id="expense-modal" class="fixed inset-0 z-40 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm hidden overflow-y-auto p-4">
+        <div class="bg-white rounded-lg shadow-xl w-full max-w-lg m-auto border-t-4 border-red-600">
+            <form id="expense-form">
+                <div class="px-6 py-4 border-b border-gray-200 flex justify-between items-center">
+                    <h3 class="text-xl font-bold text-red-700">Catat Pengeluaran</h3>
+                    <button type="button" id="close-expense-modal-btn-x" class="p-1 text-gray-400 hover:text-gray-700 rounded-full focus:outline-none focus:ring-2 focus:ring-gray-400">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                    </button>
+                </div>
+                <div class="p-6 space-y-4">
+                    <div><label class="block text-sm font-medium text-gray-700">Keperluan / Keterangan</label><input type="text" id="expenseDescription" required class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-red-500 sm:text-sm" placeholder="Contoh: Sewa Lapangan, Wasit, Air Minum"></div>
+                    <div><label class="block text-sm font-medium text-gray-700">Nominal Pengeluaran</label><div class="relative mt-1"><span class="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500 sm:text-sm">Rp</span><input type="text" id="expenseAmount" inputmode="numeric" required class="pl-10 pr-4 py-2 block w-full border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-red-500 sm:text-sm"></div></div>
+                    <p class="text-xs text-gray-500">Tanggal/Jam: <span id="expense-modal-timestamp"></span><br>Dicatat oleh Admin: <span id="expense-modal-admin-name"></span></p>
+                </div>
+                <div class="px-6 py-4 bg-gray-50 rounded-b-lg flex justify-end space-x-3">
+                    <button type="button" id="close-expense-modal-footer" class="px-4 py-2 bg-white border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-400">Batal</button>
+                    <button type="submit" id="save-expense-btn" class="px-4 py-2 bg-red-600 border border-transparent rounded-lg text-sm font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">Simpan Pengeluaran</button>
                 </div>
             </form>
         </div>
@@ -232,7 +277,7 @@
     <div id="delete-confirm-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm hidden p-4">
         <div class="bg-white rounded-lg shadow-xl w-full max-w-sm m-auto">
             <div class="p-6">
-                <h3 class="text-lg font-bold text-gray-900">Hapus Transaksi</h3>
+                <h3 class="text-lg font-bold text-gray-900">Hapus Data?</h3>
                 <p id="delete-modal-text" class="mt-2 text-sm text-gray-600">Apakah Anda yakin?</p>
             </div>
             <div class="px-6 py-4 bg-gray-50 rounded-b-lg flex justify-end space-x-3">
@@ -248,7 +293,7 @@
         import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, doc, addDoc, updateDoc, deleteDoc, onSnapshot, collection, query, orderBy, serverTimestamp, setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // --- KONFIGURASI FIREBASE ANDA (PASTIKAN INI BENAR) ---
+        // --- KONFIGURASI FIREBASE ---
         const firebaseConfig = {
             apiKey: "AIzaSyBJjNIH6E47Iqtul0Cj-6awqMeEFLQ_60Q",
             authDomain: "fit-fc.firebaseapp.com",
@@ -267,62 +312,56 @@
         // Global variables
         let currentAdmin = null;
         let allTransactions = [];
+        let allExpenses = []; // Store expenses
         let transactionsListener = null;
-        let transactionsCollectionPath = '';
+        let expensesListener = null;
         let transactionChart = null;
+        let cashFlowChart = null; // New chart
         let currentEditingId = null;
         let currentDeleteId = null;
         let currentHistoryPage = 1;
         const ITEMS_PER_PAGE = 10;
         let selectedTransactionIds = new Set();
 
-        // DOM Elements Getter (Safe)
+        // DOM Elements Getter
         const get = (id) => document.getElementById(id);
 
-        // Elements
+        // Auth
         const loginOverlay = get('login-overlay');
         const loginForm = get('login-form');
         const loginButton = get('login-button');
         const loginError = get('login-error');
         const appContainer = get('app-container');
         const sidebar = get('sidebar');
-        const openSidebarBtn = get('open-sidebar-btn');
-        const closeSidebarBtn = get('close-sidebar-btn');
         const logoutButton = get('logout-button');
-        const addTransactionBtnMain = get('add-transaction-btn-main');
+        
+        // UI
         const adminNameDisplay = get('admin-name-display');
         const adminEmailDisplay = get('admin-email-display');
-        
         const dashboardView = get('dashboard-view');
         const historyView = get('history-view');
         const navDashboard = get('nav-dashboard');
         const navHistory = get('nav-history');
         
+        // Transaction Modal (Income)
         const transactionModal = get('transaction-modal');
         const transactionForm = get('transaction-form');
         const modalTitle = get('modal-title');
-        const closeModalBtnX = get('close-modal-btn-x');
-        const closeModalBtnFooter = get('close-modal-btn-footer');
         const saveTransactionBtn = get('save-transaction-btn');
-        const modalTimestamp = get('modal-timestamp');
-        const modalAdminName = get('modal-admin-name');
         
+        // Expense Modal
+        const expenseModal = get('expense-modal');
+        const expenseForm = get('expense-form');
+        const saveExpenseBtn = get('save-expense-btn');
+
+        // Delete Modal
         const deleteConfirmModal = get('delete-confirm-modal');
         const deleteModalText = get('delete-modal-text');
-        const cancelDeleteBtn = get('cancel-delete-btn');
         const confirmDeleteBtn = get('confirm-delete-btn');
 
-        const historySearch = get('history-search');
-        const historyPrevBtn = get('history-prev-btn');
-        const historyNextBtn = get('history-next-btn');
-        const historyPageInfo = get('history-page-info');
+        // Helpers
+        const formatCurrency = (val) => 'Rp ' + (val || 0).toLocaleString('id-ID');
         
-        // Bulk Action Elements (With safety checks below)
-        const selectAllCheckbox = get('select-all-checkbox');
-        const bulkActionContainer = get('bulk-action-container');
-        const selectedCountSpan = get('selected-count');
-        const bulkDeleteBtn = get('bulk-delete-btn');
-
         // --- AUTHENTICATION ---
         onAuthStateChanged(auth, (user) => {
             if (user) {
@@ -335,113 +374,150 @@
                 adminNameDisplay.textContent = currentAdmin.name;
                 adminEmailDisplay.textContent = currentAdmin.email;
                 setupTransactionListener();
+                setupExpenseListener(); // Listener baru untuk pengeluaran
             } else {
                 appContainer.classList.add('hidden');
                 loginOverlay.classList.remove('hidden');
                 if (transactionsListener) { transactionsListener(); transactionsListener = null; }
+                if (expensesListener) { expensesListener(); expensesListener = null; }
             }
         });
 
         loginForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-            loginButton.disabled = true;
-            loginButton.textContent = 'Memproses...';
-            loginError.classList.add('hidden');
-            try {
-                await signInWithEmailAndPassword(auth, get('email').value, get('password').value);
-            } catch (error) {
-                loginError.textContent = 'Email atau password salah.';
-                loginError.classList.remove('hidden');
-            } finally {
-                loginButton.disabled = false;
-                loginButton.textContent = 'Masuk';
-            }
+            loginButton.disabled = true; loginButton.textContent = 'Memproses...'; loginError.classList.add('hidden');
+            try { await signInWithEmailAndPassword(auth, get('email').value, get('password').value); }
+            catch (error) { loginError.textContent = 'Email atau password salah.'; loginError.classList.remove('hidden'); }
+            finally { loginButton.disabled = false; loginButton.textContent = 'Masuk'; }
         });
 
         logoutButton.addEventListener('click', () => signOut(auth));
 
         // --- NAVIGATION ---
-        function showView(viewId) {
-            dashboardView.classList.add('hidden');
-            historyView.classList.add('hidden');
-            navDashboard.classList.remove('bg-gray-700', 'text-white');
-            navDashboard.classList.add('text-gray-300', 'hover:bg-gray-700');
-            navHistory.classList.remove('bg-gray-700', 'text-white');
-            navHistory.classList.add('text-gray-300', 'hover:bg-gray-700');
-
-            if (viewId === 'dashboard-view') {
+        const showView = (view) => {
+            dashboardView.classList.add('hidden'); historyView.classList.add('hidden');
+            navDashboard.classList.remove('bg-gray-700', 'text-white'); navDashboard.classList.add('text-gray-300');
+            navHistory.classList.remove('bg-gray-700', 'text-white'); navHistory.classList.add('text-gray-300');
+            
+            if (view === 'dashboard') {
                 dashboardView.classList.remove('hidden');
                 navDashboard.classList.add('bg-gray-700', 'text-white');
-                navDashboard.classList.remove('text-gray-300');
             } else {
                 historyView.classList.remove('hidden');
                 navHistory.classList.add('bg-gray-700', 'text-white');
-                navHistory.classList.remove('text-gray-300');
-                currentHistoryPage = 1;
-                renderHistoryList(allTransactions, historySearch.value);
+                currentHistoryPage = 1; renderHistoryList(allTransactions, get('history-search').value);
             }
-        }
-        navDashboard.addEventListener('click', (e) => { e.preventDefault(); showView('dashboard-view'); });
-        navHistory.addEventListener('click', (e) => { e.preventDefault(); showView('history-view'); });
+        };
+        navDashboard.addEventListener('click', (e) => { e.preventDefault(); showView('dashboard'); });
+        navHistory.addEventListener('click', (e) => { e.preventDefault(); showView('history'); });
+        get('open-sidebar-btn').addEventListener('click', () => sidebar.classList.remove('-translate-x-full'));
+        get('close-sidebar-btn').addEventListener('click', () => sidebar.classList.add('-translate-x-full'));
 
-        // --- UI ACTIONS ---
-        openSidebarBtn.addEventListener('click', () => sidebar.classList.remove('-translate-x-full'));
-        closeSidebarBtn.addEventListener('click', () => sidebar.classList.add('-translate-x-full'));
-
-        // --- TRANSACTION CRUD ---
+        // --- DATA LISTENERS ---
         function setupTransactionListener() {
-            transactionsCollectionPath = `artifacts/${appId}/public/data/transactions`;
-            const q = query(collection(db, transactionsCollectionPath), orderBy('lastUpdatedAt', 'desc'));
+            const q = query(collection(db, `artifacts/${appId}/public/data/transactions`), orderBy('lastUpdatedAt', 'desc'));
             transactionsListener = onSnapshot(q, (snapshot) => {
                 allTransactions = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                updateDashboard(allTransactions);
-                renderHistoryList(allTransactions, historySearch.value);
-                updateRecentActivity(allTransactions);
-                renderDashboardTable(allTransactions);
+                refreshDashboard();
+                renderHistoryList(allTransactions, get('history-search').value);
             });
         }
 
-        // Format input
-        get('amount').addEventListener('input', (e) => {
-            let v = e.target.value.replace(/[^0-9]/g, '');
-            e.target.value = v ? parseInt(v, 10).toLocaleString('id-ID') : '';
-        });
-
-        // Open/Close Modals
-        function closeModal() {
-            transactionModal.classList.add('hidden');
-            transactionForm.reset();
-            currentEditingId = null;
+        function setupExpenseListener() {
+            // Koleksi baru untuk pengeluaran
+            const q = query(collection(db, `artifacts/${appId}/public/data/expenses`), orderBy('date', 'desc'));
+            expensesListener = onSnapshot(q, (snapshot) => {
+                allExpenses = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                refreshDashboard();
+            });
         }
-        addTransactionBtnMain.addEventListener('click', () => {
-            currentEditingId = null;
-            transactionForm.reset();
-            modalTitle.textContent = 'Tambah Pemasukan Baru';
-            saveTransactionBtn.textContent = 'Simpan Transaksi';
-            modalTimestamp.textContent = new Date().toLocaleString('id-ID', { dateStyle: 'short', timeStyle: 'short' });
-            modalAdminName.textContent = currentAdmin.name;
+
+        function refreshDashboard() {
+            // Hitung total
+            const totalIncome = allTransactions.reduce((s, i) => s + (i.amount || 0), 0);
+            const totalExpense = allExpenses.reduce((s, i) => s + (i.amount || 0), 0);
+            const balance = totalIncome - totalExpense;
+
+            get('total-revenue').textContent = formatCurrency(totalIncome);
+            get('total-expense').textContent = formatCurrency(totalExpense); // Update Card Pengeluaran
+            get('net-balance').textContent = formatCurrency(balance); // Update Card Saldo
+            get('total-transactions').textContent = allTransactions.length;
+            
+            updatePaymentChart(allTransactions);
+            updateCashFlowChart(totalIncome, totalExpense); // Update Chart Baru
+            updateRecentActivity(allTransactions); // Gabung activity nanti bisa opsi lanjutan
+            renderDashboardTable(allTransactions);
+        }
+
+        // --- CHARTS ---
+        function updatePaymentChart(data) {
+            const counts = data.reduce((acc, tx) => { acc[tx.paymentType] = (acc[tx.paymentType] || 0) + tx.amount; return acc; }, {});
+            const chartData = {
+                labels: ['QRIS', 'Transfer', 'Tunai'],
+                datasets: [{ data: [counts['qris']||0, counts['transfer']||0, counts['tunai']||0], backgroundColor: ['#3B82F6','#10B981','#F59E0B'] }]
+            };
+            const ctx = get('payment-chart').getContext('2d');
+            if (transactionChart) { transactionChart.data = chartData; transactionChart.update(); }
+            else transactionChart = new Chart(ctx, { type: 'doughnut', data: chartData, options: { responsive: true, maintainAspectRatio: false } });
+        }
+
+        function updateCashFlowChart(income, expense) {
+            const ctx = get('cash-flow-chart').getContext('2d');
+            const chartData = {
+                labels: ['Pemasukan', 'Pengeluaran'],
+                datasets: [{
+                    label: 'Nominal (Rp)',
+                    data: [income, expense],
+                    backgroundColor: ['#3B82F6', '#EF4444'], // Biru & Merah
+                    borderRadius: 5
+                }]
+            };
+            if (cashFlowChart) { cashFlowChart.data = chartData; cashFlowChart.update(); }
+            else {
+                cashFlowChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: chartData,
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { display: false } },
+                        scales: { y: { beginAtZero: true } }
+                    }
+                });
+            }
+        }
+
+        // --- MODALS & FORMS (INCOME) ---
+        const formatInput = (e) => { let v = e.target.value.replace(/[^0-9]/g, ''); e.target.value = v ? parseInt(v, 10).toLocaleString('id-ID') : ''; };
+        get('amount').addEventListener('input', formatInput);
+        get('expenseAmount').addEventListener('input', formatInput);
+
+        // Income Modal Functions
+        get('add-transaction-btn-main').addEventListener('click', () => {
+            currentEditingId = null; transactionForm.reset();
+            modalTitle.textContent = 'Tambah Pemasukan Baru'; saveTransactionBtn.textContent = 'Simpan Transaksi';
+            get('modal-timestamp').textContent = new Date().toLocaleString('id-ID');
+            get('modal-admin-name').textContent = currentAdmin.name;
             transactionModal.classList.remove('hidden');
         });
-        closeModalBtnX.addEventListener('click', closeModal);
-        closeModalBtnFooter.addEventListener('click', closeModal);
+        const closeIncomeModal = () => transactionModal.classList.add('hidden');
+        get('close-modal-btn-x').addEventListener('click', closeIncomeModal);
+        get('close-modal-btn-footer').addEventListener('click', closeIncomeModal);
 
         window.openModalForEdit = (id) => {
             const item = allTransactions.find(tx => tx.id === id);
             if (!item) return;
             currentEditingId = id;
-            get('playerName').value = item.playerName || '';
+            get('playerName').value = item.playerName;
             get('amount').value = (item.amount || 0).toLocaleString('id-ID');
             get('paymentType').value = item.paymentType;
-            get('notes').value = item.notes || '';
-            modalTitle.textContent = 'Edit Transaksi';
-            saveTransactionBtn.textContent = 'Simpan Perubahan';
-            modalAdminName.textContent = currentAdmin.name;
+            get('notes').value = item.notes;
+            modalTitle.textContent = 'Edit Transaksi'; saveTransactionBtn.textContent = 'Simpan Perubahan';
             transactionModal.classList.remove('hidden');
         };
 
         transactionForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            saveTransactionBtn.disabled = true;
+            e.preventDefault(); saveTransactionBtn.disabled = true;
             const rawAmount = get('amount').value.replace(/[^0-9]/g, '');
             const data = {
                 playerName: get('playerName').value,
@@ -453,168 +529,146 @@
                 lastUpdatedByAdminName: currentAdmin.name
             };
             try {
-                if (currentEditingId) {
-                    await updateDoc(doc(db, transactionsCollectionPath, currentEditingId), data);
-                } else {
+                const col = `artifacts/${appId}/public/data/transactions`;
+                if (currentEditingId) await updateDoc(doc(db, col, currentEditingId), data);
+                else {
                     data.createdAt = serverTimestamp();
                     data.createdByAdminId = currentAdmin.uid;
                     data.createdByAdminName = currentAdmin.name;
-                    await addDoc(collection(db, transactionsCollectionPath), data);
+                    await addDoc(collection(db, col), data);
                 }
-                closeModal();
-            } catch (err) {
-                console.error(err);
-                alert("Gagal menyimpan data.");
-            } finally {
-                saveTransactionBtn.disabled = false;
-            }
+                closeIncomeModal();
+            } catch (err) { console.error(err); alert("Gagal simpan."); }
+            finally { saveTransactionBtn.disabled = false; }
         });
 
-        // --- DELETE LOGIC (Single & Bulk) ---
+        // --- MODALS & FORMS (EXPENSE) ---
+        get('add-expense-btn-main').addEventListener('click', () => {
+            expenseForm.reset();
+            get('expense-modal-timestamp').textContent = new Date().toLocaleString('id-ID');
+            get('expense-modal-admin-name').textContent = currentAdmin.name;
+            expenseModal.classList.remove('hidden');
+        });
+        const closeExpenseModal = () => expenseModal.classList.add('hidden');
+        get('close-expense-modal-btn-x').addEventListener('click', closeExpenseModal);
+        get('close-expense-modal-footer').addEventListener('click', closeExpenseModal);
+
+        expenseForm.addEventListener('submit', async (e) => {
+            e.preventDefault(); saveExpenseBtn.disabled = true;
+            const rawAmount = get('expenseAmount').value.replace(/[^0-9]/g, '');
+            const data = {
+                description: get('expenseDescription').value,
+                amount: parseInt(rawAmount, 10) || 0,
+                date: serverTimestamp(),
+                recordedByAdminId: currentAdmin.uid,
+                recordedByAdminName: currentAdmin.name
+            };
+            try {
+                await addDoc(collection(db, `artifacts/${appId}/public/data/expenses`), data);
+                closeExpenseModal();
+            } catch (err) { console.error(err); alert("Gagal simpan pengeluaran."); }
+            finally { saveExpenseBtn.disabled = false; }
+        });
+
+        // --- DELETE ---
         window.showDeleteModal = (id, name) => {
             currentDeleteId = id;
-            deleteModalText.textContent = `Hapus "${name}"?`;
-            confirmDeleteBtn.onclick = confirmSingleDelete;
+            get('delete-modal-text').textContent = `Hapus "${name}"?`;
+            confirmDeleteBtn.onclick = async () => {
+                try {
+                    await deleteDoc(doc(db, `artifacts/${appId}/public/data/transactions`, currentDeleteId));
+                    deleteConfirmModal.classList.add('hidden');
+                } catch (err) { console.error(err); }
+            };
             deleteConfirmModal.classList.remove('hidden');
         };
+        get('cancel-delete-btn').addEventListener('click', () => deleteConfirmModal.classList.add('hidden'));
 
-        async function confirmSingleDelete() {
-            try {
-                await deleteDoc(doc(db, transactionsCollectionPath, currentDeleteId));
-                deleteConfirmModal.classList.add('hidden');
-            } catch (err) { console.error(err); }
-        }
-
-        if (cancelDeleteBtn) cancelDeleteBtn.addEventListener('click', () => deleteConfirmModal.classList.add('hidden'));
-
-        // Bulk Delete
-        function updateBulkActionBar() {
-            if (!bulkActionContainer) return;
-            const count = selectedTransactionIds.size;
-            if (count > 0) {
-                bulkActionContainer.classList.remove('hidden');
-                selectedCountSpan.textContent = `${count} terpilih`;
+        // --- BULK DELETE (History) ---
+        const updateBulkUI = () => {
+            if (selectedTransactionIds.size > 0) {
+                get('bulk-action-container').classList.remove('hidden');
+                get('selected-count').textContent = `${selectedTransactionIds.size} terpilih`;
             } else {
-                bulkActionContainer.classList.add('hidden');
-                if (selectAllCheckbox) selectAllCheckbox.checked = false;
+                get('bulk-action-container').classList.add('hidden');
+                if(get('select-all-checkbox')) get('select-all-checkbox').checked = false;
             }
-        }
-
-        if (selectAllCheckbox) {
-            selectAllCheckbox.addEventListener('change', (e) => {
-                const checkboxes = document.querySelectorAll('.tx-checkbox');
-                checkboxes.forEach(cb => {
+        };
+        if (get('select-all-checkbox')) {
+            get('select-all-checkbox').addEventListener('change', (e) => {
+                document.querySelectorAll('.tx-checkbox').forEach(cb => {
                     cb.checked = e.target.checked;
-                    if (e.target.checked) selectedTransactionIds.add(cb.value);
+                    if(e.target.checked) selectedTransactionIds.add(cb.value);
                     else selectedTransactionIds.delete(cb.value);
                 });
-                updateBulkActionBar();
+                updateBulkUI();
             });
         }
-
-        if (bulkDeleteBtn) {
-            bulkDeleteBtn.addEventListener('click', () => {
-                const count = selectedTransactionIds.size;
-                if (count === 0) return;
-                deleteModalText.textContent = `Hapus ${count} data terpilih?`;
+        if (get('bulk-delete-btn')) {
+            get('bulk-delete-btn').addEventListener('click', () => {
+                get('delete-modal-text').textContent = `Hapus ${selectedTransactionIds.size} data?`;
                 confirmDeleteBtn.onclick = async () => {
-                    const promises = Array.from(selectedTransactionIds).map(id => deleteDoc(doc(db, transactionsCollectionPath, id)));
+                    const promises = Array.from(selectedTransactionIds).map(id => deleteDoc(doc(db, `artifacts/${appId}/public/data/transactions`, id)));
                     await Promise.all(promises);
-                    selectedTransactionIds.clear();
-                    updateBulkActionBar();
+                    selectedTransactionIds.clear(); updateBulkUI();
                     deleteConfirmModal.classList.add('hidden');
                 };
                 deleteConfirmModal.classList.remove('hidden');
             });
         }
 
-        // --- RENDER FUNCTIONS ---
-        function formatCurrency(val) { return 'Rp ' + (val || 0).toLocaleString('id-ID'); }
-
-        function updateDashboard(data) {
-            get('total-revenue').textContent = formatCurrency(data.reduce((s, i) => s + i.amount, 0));
-            get('total-transactions').textContent = data.length;
-            get('unique-players').textContent = new Set(data.map(i => i.playerName)).size;
+        // --- RENDER LISTS ---
+        function renderHistoryList(data, filter) {
+            const list = get('history-list-tbody'); list.innerHTML = '';
+            if(filter) { selectedTransactionIds.clear(); updateBulkUI(); }
             
-            const counts = data.reduce((acc, tx) => { acc[tx.paymentType] = (acc[tx.paymentType] || 0) + tx.amount; return acc; }, {});
-            const chartData = {
-                labels: ['QRIS', 'Transfer', 'Tunai'],
-                datasets: [{ data: [counts['qris']||0, counts['transfer']||0, counts['tunai']||0], backgroundColor: ['#3B82F6','#10B981','#F59E0B'] }]
-            };
-            if (transactionChart) { transactionChart.data = chartData; transactionChart.update(); }
-            else {
-                const ctx = get('payment-chart').getContext('2d');
-                transactionChart = new Chart(ctx, { type: 'doughnut', data: chartData, options: { responsive: true, maintainAspectRatio: false } });
-            }
-        }
-
-        function renderHistoryList(data, filter = '') {
-            const list = get('history-list-tbody');
-            list.innerHTML = '';
-            
-            // Safety: clear selection on search
-            if (filter) { selectedTransactionIds.clear(); updateBulkActionBar(); }
-
             const filtered = data.filter(i => (i.playerName||'').toLowerCase().includes(filter.toLowerCase()));
             const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE) || 1;
             if (currentHistoryPage > totalPages) currentHistoryPage = totalPages;
             
             const start = (currentHistoryPage - 1) * ITEMS_PER_PAGE;
             const pageData = filtered.slice(start, start + ITEMS_PER_PAGE);
+            
+            get('history-page-info').textContent = `Hal. ${currentHistoryPage} dari ${totalPages}`;
+            get('history-prev-btn').disabled = currentHistoryPage === 1;
+            get('history-next-btn').disabled = currentHistoryPage === totalPages;
 
-            historyPageInfo.textContent = `Hal. ${currentHistoryPage} dari ${totalPages}`;
-            historyPrevBtn.disabled = currentHistoryPage === 1;
-            historyNextBtn.disabled = currentHistoryPage === totalPages;
-
-            if (pageData.length === 0) {
-                list.innerHTML = '<tr><td colspan="8" class="px-6 py-4 text-center text-sm text-gray-400">Tidak ada data.</td></tr>';
-                return;
-            }
-
-            const styles = { qris: 'bg-blue-100 text-blue-800', transfer: 'bg-green-100 text-green-800', tunai: 'bg-yellow-100 text-yellow-800' };
+            if (pageData.length === 0) { list.innerHTML = '<tr><td colspan="8" class="text-center py-4 text-gray-400">Kosong</td></tr>'; return; }
 
             pageData.forEach(item => {
+                const tr = document.createElement('tr'); tr.className = "hover:bg-gray-50";
                 const isChecked = selectedTransactionIds.has(item.id);
-                const tr = document.createElement('tr');
-                tr.className = "hover:bg-gray-50 transition-colors";
-                const time = item.lastUpdatedAt?.toDate ? item.lastUpdatedAt.toDate().toLocaleString('id-ID', { dateStyle: 'short', timeStyle: 'short' }) : '-';
-                const style = styles[item.paymentType] || 'bg-gray-100';
-                
+                const time = item.lastUpdatedAt?.toDate ? item.lastUpdatedAt.toDate().toLocaleString('id-ID', {dateStyle:'short', timeStyle:'short'}) : '-';
                 tr.innerHTML = `
-                    <td class="px-6 py-4"><input type="checkbox" value="${item.id}" class="tx-checkbox rounded text-blue-600 focus:ring-blue-500" ${isChecked ? 'checked' : ''}></td>
+                    <td class="px-6 py-4"><input type="checkbox" value="${item.id}" class="tx-checkbox rounded text-blue-600" ${isChecked?'checked':''}></td>
                     <td class="px-6 py-4 text-sm text-gray-600">${time}</td>
-                    <td class="px-6 py-4 text-sm font-medium text-gray-900">${item.playerName}</td>
+                    <td class="px-6 py-4 text-sm font-medium">${item.playerName}</td>
                     <td class="px-6 py-4 text-sm text-gray-700">${formatCurrency(item.amount)}</td>
-                    <td class="px-6 py-4 text-sm"><span class="px-2 py-0.5 rounded-full text-xs font-medium ${style}">${item.paymentType}</span></td>
-                    <td class="px-6 py-4 text-sm text-gray-600">${item.lastUpdatedByAdminName || '-'}</td>
-                    <td class="px-6 py-4 text-sm text-gray-500 truncate max-w-xs">${item.notes || '-'}</td>
-                    <td class="px-6 py-4 text-right text-sm font-medium">
-                        <button onclick="openModalForEdit('${item.id}')" class="text-indigo-600 hover:text-indigo-900 mr-3">Edit</button>
-                        <button onclick="showDeleteModal('${item.id}', '${item.playerName}')" class="text-red-600 hover:text-red-900">Hapus</button>
-                    </td>
-                `;
+                    <td class="px-6 py-4 text-sm"><span class="px-2 py-0.5 rounded-full bg-gray-100 text-xs font-medium">${item.paymentType}</span></td>
+                    <td class="px-6 py-4 text-sm text-gray-600">${item.lastUpdatedByAdminName}</td>
+                    <td class="px-6 py-4 text-sm text-gray-500 truncate max-w-xs">${item.notes}</td>
+                    <td class="px-6 py-4 text-right text-sm">
+                        <button onclick="openModalForEdit('${item.id}')" class="text-indigo-600 mr-3">Edit</button>
+                        <button onclick="showDeleteModal('${item.id}', '${item.playerName}')" class="text-red-600">Hapus</button>
+                    </td>`;
                 tr.querySelector('.tx-checkbox').addEventListener('change', (e) => {
-                    if (e.target.checked) selectedTransactionIds.add(item.id);
-                    else { selectedTransactionIds.delete(item.id); if (selectAllCheckbox) selectAllCheckbox.checked = false; }
-                    updateBulkActionBar();
+                    if(e.target.checked) selectedTransactionIds.add(item.id); else selectedTransactionIds.delete(item.id);
+                    updateBulkUI();
                 });
                 list.appendChild(tr);
             });
         }
-
-        historyPrevBtn.addEventListener('click', () => { if (currentHistoryPage > 1) { currentHistoryPage--; renderHistoryList(allTransactions, historySearch.value); }});
-        historyNextBtn.addEventListener('click', () => { 
-            const filtered = allTransactions.filter(i => (i.playerName||'').toLowerCase().includes(historySearch.value.toLowerCase()));
-            if (currentHistoryPage < Math.ceil(filtered.length/ITEMS_PER_PAGE)) { currentHistoryPage++; renderHistoryList(allTransactions, historySearch.value); }
+        get('history-search').addEventListener('input', (e) => { currentHistoryPage = 1; renderHistoryList(allTransactions, e.target.value); });
+        get('history-prev-btn').addEventListener('click', () => { if(currentHistoryPage > 1) { currentHistoryPage--; renderHistoryList(allTransactions, get('history-search').value); }});
+        get('history-next-btn').addEventListener('click', () => { 
+            const filtered = allTransactions.filter(i => (i.playerName||'').toLowerCase().includes(get('history-search').value.toLowerCase()));
+            if(currentHistoryPage < Math.ceil(filtered.length/ITEMS_PER_PAGE)) { currentHistoryPage++; renderHistoryList(allTransactions, get('history-search').value); }
         });
-        historySearch.addEventListener('input', (e) => { currentHistoryPage = 1; renderHistoryList(allTransactions, e.target.value); });
 
         function updateRecentActivity(data) {
-            const list = get('recent-activity-list');
-            list.innerHTML = '';
+            const list = get('recent-activity-list'); list.innerHTML = '';
             data.slice(0, 5).forEach(item => {
-                const li = document.createElement('li');
-                li.className = 'flex items-center space-x-3';
+                const li = document.createElement('li'); li.className = 'flex items-center space-x-3';
                 const action = (item.createdAt && item.lastUpdatedAt && item.createdAt.seconds === item.lastUpdatedAt.seconds) ? 'menambah' : 'mengedit';
                 li.innerHTML = `<span class="w-8 h-8 flex items-center justify-center bg-blue-100 rounded-full text-blue-600 text-xs">●</span>
                                 <div class="text-sm text-gray-700"><span class="font-bold">${item.lastUpdatedByAdminName}</span> ${action} <span class="font-bold">${item.playerName}</span></div>`;
@@ -623,26 +677,15 @@
         }
 
         function renderDashboardTable(data) {
-            const list = get('dashboard-recent-tx-list');
-            list.innerHTML = '';
-            const styles = { qris: 'bg-blue-100 text-blue-800', transfer: 'bg-green-100 text-green-800', tunai: 'bg-yellow-100 text-yellow-800' };
+            const list = get('dashboard-recent-tx-list'); list.innerHTML = '';
             data.slice(0, 5).forEach(item => {
-                const tr = document.createElement('tr');
-                tr.className = "hover:bg-gray-50 transition-colors";
-                const style = styles[item.paymentType] || 'bg-gray-100';
-                const time = item.lastUpdatedAt?.toDate ? item.lastUpdatedAt.toDate().toLocaleString('id-ID', { dateStyle: 'short', timeStyle: 'short' }) : '-';
+                const tr = document.createElement('tr'); tr.className = "hover:bg-gray-50";
+                const time = item.lastUpdatedAt?.toDate ? item.lastUpdatedAt.toDate().toLocaleString('id-ID', {dateStyle:'short', timeStyle:'short'}) : '-';
                 tr.innerHTML = `
                     <td class="px-6 py-4 text-sm text-gray-600">${time}</td>
-                    <td class="px-6 py-4 text-sm font-medium text-gray-900">${item.playerName}</td>
+                    <td class="px-6 py-4 text-sm font-medium">${item.playerName}</td>
                     <td class="px-6 py-4 text-sm text-gray-700">${formatCurrency(item.amount)}</td>
-                    <td class="px-6 py-4 text-sm"><span class="px-2 py-0.5 rounded-full text-xs font-medium ${style}">${item.paymentType}</span></td>
-                    <td class="px-6 py-4 text-sm text-gray-600">${item.lastUpdatedByAdminName || '-'}</td>
-                    <td class="px-6 py-4 text-sm text-gray-500 truncate max-w-xs">${item.notes || '-'}</td>
-                    <td class="px-6 py-4 text-right text-sm font-medium">
-                        <button onclick="openModalForEdit('${item.id}')" class="text-indigo-600 hover:text-indigo-900 mr-3">Edit</button>
-                        <button onclick="showDeleteModal('${item.id}', '${item.playerName}')" class="text-red-600 hover:text-red-900">Hapus</button>
-                    </td>
-                `;
+                    <td class="px-6 py-4 text-sm text-gray-500">${item.notes}</td>`;
                 list.appendChild(tr);
             });
         }
