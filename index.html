@@ -186,44 +186,10 @@
                                 <table class="min-w-full divide-y divide-gray-200">
                                     <thead class="bg-gray-50">
                                         <tr>
-                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tanggal/Jam</th>
-                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama</th>
-                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nominal Bayar</th>
-                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Jenis Pembayaran</th>
-                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status Admin</th>
-                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Keterangan</th>
-                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="dashboard-recent-tx-list" class="bg-white divide-y divide-gray-200">
-                                        <!-- Data akan di-render oleh JS -->
-                                        <tr>
-                                            <td colspan="7" class="px-6 py-4 text-center text-sm text-gray-400">Memuat data...</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                        <!-- ===== End Transaksi Terbaru ===== -->
-
-                    </div> <!-- End Dashboard View -->
-
-                    <!-- ===== History View ===== -->
-                    <div id="history-view" class="hidden">
-                        <div class="bg-white rounded-lg shadow-lg">
-                            <h3 class="px-6 py-4 text-lg font-semibold text-gray-800 border-b border-gray-200">Riwayat Semua Transaksi</h3>
-                            
-                            <!-- Filter -->
-                            <div class="px-6 py-4">
-                                <input id="history-search" type="text" placeholder="Cari berdasarkan nama pemain..." 
-                                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200">
-                            </div>
-
-                            <!-- Wrapper untuk scrolling di mobile -->
-                            <div class="overflow-x-auto">
-                                <table class="min-w-full divide-y divide-gray-200">
-                                    <thead class="bg-gray-50">
-                                        <tr>
+                                            <!-- Checkbox Header -->
+                                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                <input type="checkbox" id="select-all-checkbox" class="rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50">
+                                            </th>
                                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tanggal/Jam</th>
                                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama</th>
                                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nominal Bayar</th>
@@ -239,21 +205,32 @@
                                 </table>
                             </div>
 
-                            <!-- ===== Kontrol Paginasi ===== -->
-                            <div class="px-6 py-4 border-t border-gray-200 flex items-center justify-between">
-                                <button id="history-prev-btn"
-                                        class="px-4 py-2 bg-white border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50
-                                               disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-150">
-                                    &larr; Sebelumnya
-                                </button>
-                                <span id="history-page-info" class="text-sm text-gray-600">
-                                    Hal. 1 dari 1
-                                </span>
-                                <button id="history-next-btn"
-                                        class="px-4 py-2 bg-white border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50
-                                               disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-150">
-                                    Berikutnya &rarr;
-                                </button>
+                            <!-- ===== Kontrol Paginasi & Bulk Action ===== -->
+                            <div class="px-6 py-4 border-t border-gray-200 flex flex-col md:flex-row items-center justify-between gap-4">
+                                <!-- Tombol Hapus Masal (Hidden by default) -->
+                                <div id="bulk-action-container" class="hidden flex items-center space-x-3">
+                                    <span id="selected-count" class="text-sm text-gray-600">0 terpilih</span>
+                                    <button id="bulk-delete-btn" class="px-4 py-2 bg-red-600 text-white rounded-lg text-sm font-medium hover:bg-red-700 transition-colors duration-150">
+                                        Hapus Terpilih
+                                    </button>
+                                </div>
+                                
+                                <!-- Paginasi -->
+                                <div class="flex items-center justify-between w-full md:w-auto space-x-2">
+                                    <button id="history-prev-btn"
+                                            class="px-4 py-2 bg-white border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50
+                                                   disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-150">
+                                        &larr; Sebelumnya
+                                    </button>
+                                    <span id="history-page-info" class="text-sm text-gray-600">
+                                        Hal. 1 dari 1
+                                    </span>
+                                    <button id="history-next-btn"
+                                            class="px-4 py-2 bg-white border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50
+                                                   disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-150">
+                                        Berikutnya &rarr;
+                                    </button>
+                                </div>
                             </div>
                             <!-- ===== End Kontrol Paginasi ===== -->
 
@@ -407,12 +384,13 @@
         let transactionsListener = null;
         let transactionsCollectionPath = '';
         let transactionChart = null;
-        let currentEditingId = null; // Untuk fitur Edit nanti
-        let currentDeleteId = null; // Variabel untuk menyimpan ID yang akan dihapus
-        
-        // Variabel untuk Paging
+        let currentEditingId = null; 
+        let currentDeleteId = null; 
         let currentHistoryPage = 1;
-        const ITEMS_PER_PAGE = 10; // 10 item per halaman
+        const ITEMS_PER_PAGE = 10;
+        
+        // Variabel untuk Bulk Action
+        let selectedTransactionIds = new Set(); // Menggunakan Set untuk menyimpan ID unik
 
         // DOM Elements
         const loginOverlay = document.getElementById('login-overlay');
@@ -459,6 +437,12 @@
         const historyPrevBtn = document.getElementById('history-prev-btn');
         const historyNextBtn = document.getElementById('history-next-btn');
         const historyPageInfo = document.getElementById('history-page-info');
+        
+        // Bulk Action Elements
+        const selectAllCheckbox = document.getElementById('select-all-checkbox');
+        const bulkActionContainer = document.getElementById('bulk-action-container');
+        const selectedCountSpan = document.getElementById('selected-count');
+        const bulkDeleteBtn = document.getElementById('bulk-delete-btn');
 
         // =============================================
         // APLIKASI UTAMA
@@ -556,16 +540,44 @@
         });
         
         // =============================================
-        // Logika Hapus (Delete)
+        // Logika Hapus (Single & Bulk)
         // =============================================
         
-        // Tampilkan modal konfirmasi
-        // Kita harus ekspos fungsi ini ke global scope agar onclick HTML bisa menemukannya
+        // ... (Kode hapus single tetap sama) ...
+        // Tampilkan modal konfirmasi (Single Delete)
         window.showDeleteModal = (id, name) => {
             if (!id) return;
             currentDeleteId = id;
             deleteModalText.textContent = `Apakah Anda yakin ingin menghapus transaksi untuk "${name}"? Tindakan ini tidak dapat dibatalkan.`;
+            
+            // Pastikan event listener tombol konfirmasi diarahkan ke single delete
+            confirmDeleteBtn.onclick = confirmSingleDelete; 
+            
             deleteConfirmModal.classList.remove('hidden');
+        }
+
+        // Fungsi konfirmasi hapus SATU data
+        async function confirmSingleDelete() {
+            if (!currentDeleteId) return;
+
+            confirmDeleteBtn.disabled = true;
+            confirmDeleteBtn.textContent = 'Menghapus...';
+
+            try {
+                const docRef = doc(db, transactionsCollectionPath, currentDeleteId);
+                await deleteDoc(docRef);
+                console.log("Dokumen berhasil dihapus!");
+            } catch (error) {
+                console.error("Error menghapus data:", error);
+                loginError.textContent = "Gagal menghapus data.";
+                loginError.classList.remove('hidden');
+                setTimeout(() => loginError.classList.add('hidden'), 3000);
+            } finally {
+                hideDeleteModal();
+                confirmDeleteBtn.disabled = false;
+                confirmDeleteBtn.textContent = 'Ya, Hapus';
+                confirmDeleteBtn.onclick = null; // Reset handler
+            }
         }
 
         // Sembunyikan modal konfirmasi
@@ -576,31 +588,83 @@
 
         cancelDeleteBtn.addEventListener('click', hideDeleteModal);
 
-        // Aksi saat konfirmasi hapus
-        confirmDeleteBtn.addEventListener('click', async () => {
-            if (!currentDeleteId) return;
+        // ===== LOGIKA BULK DELETE =====
 
+        // Update tampilan Bulk Action Bar
+        function updateBulkActionBar() {
+            const count = selectedTransactionIds.size;
+            if (count > 0) {
+                bulkActionContainer.classList.remove('hidden');
+                selectedCountSpan.textContent = `${count} terpilih`;
+            } else {
+                bulkActionContainer.classList.add('hidden');
+                // Uncheck "Select All" jika tidak ada yang dipilih
+                selectAllCheckbox.checked = false;
+            }
+        }
+
+        // Handler untuk checkbox "Select All"
+        selectAllCheckbox.addEventListener('change', (e) => {
+            const isChecked = e.target.checked;
+            const checkboxes = document.querySelectorAll('.tx-checkbox');
+            
+            checkboxes.forEach(cb => {
+                cb.checked = isChecked;
+                if (isChecked) {
+                    selectedTransactionIds.add(cb.value);
+                } else {
+                    selectedTransactionIds.delete(cb.value);
+                }
+            });
+            updateBulkActionBar();
+        });
+
+        // Handler Tombol Hapus Terpilih
+        bulkDeleteBtn.addEventListener('click', () => {
+            const count = selectedTransactionIds.size;
+            if (count === 0) return;
+
+            // Gunakan modal yang sama, tapi ubah teks dan handler-nya
+            deleteModalText.textContent = `Apakah Anda yakin ingin menghapus ${count} transaksi yang dipilih? Tindakan ini tidak dapat dibatalkan.`;
+            
+            // Set handler tombol konfirmasi ke fungsi bulk delete
+            confirmDeleteBtn.onclick = confirmBulkDelete;
+            
+            deleteConfirmModal.classList.remove('hidden');
+        });
+
+        // Fungsi konfirmasi hapus BANYAK data
+        async function confirmBulkDelete() {
             confirmDeleteBtn.disabled = true;
             confirmDeleteBtn.textContent = 'Menghapus...';
 
             try {
-                const docRef = doc(db, transactionsCollectionPath, currentDeleteId);
-                await deleteDoc(docRef);
-                // Data akan otomatis refresh berkat onSnapshot
-                console.log("Dokumen berhasil dihapus!");
+                const deletePromises = Array.from(selectedTransactionIds).map(id => {
+                    const docRef = doc(db, transactionsCollectionPath, id);
+                    return deleteDoc(docRef);
+                });
+
+                await Promise.all(deletePromises);
+                
+                console.log(`${selectedTransactionIds.size} dokumen berhasil dihapus!`);
+                
+                // Reset seleksi setelah berhasil hapus
+                selectedTransactionIds.clear();
+                updateBulkActionBar();
+
             } catch (error) {
-                console.error("Error menghapus data:", error);
-                // Kita tidak bisa pakai alert() di sini
-                loginError.textContent = "Gagal menghapus data.";
+                console.error("Error menghapus banyak data:", error);
+                loginError.textContent = "Gagal menghapus beberapa data.";
                 loginError.classList.remove('hidden');
-                // PERBAIKAN: Menghapus ( kelebihan
                 setTimeout(() => loginError.classList.add('hidden'), 3000);
             } finally {
                 hideDeleteModal();
                 confirmDeleteBtn.disabled = false;
                 confirmDeleteBtn.textContent = 'Ya, Hapus';
+                confirmDeleteBtn.onclick = null; // Reset handler
             }
-        });
+        }
+
 
         // =============================================
         // Logika Form (Create / Update)
@@ -956,33 +1020,43 @@
             if (!list) return; // Pastikan elemen ada
             list.innerHTML = ''; // Kosongkan list
 
+            // Reset "Select All" checkbox setiap kali render ulang (misal ganti halaman/search)
+            // Tapi kita ingin mempertahankan seleksi ID jika memungkinkan, 
+            // atau amannya kita clear saja seleksi saat pindah halaman/search agar tidak bingung.
+            // Untuk UX yang lebih sederhana: Reset seleksi saat data berubah drastis (search/paging)
+            // selectedTransactionIds.clear(); // Uncomment ini jika ingin reset seleksi tiap render
+            // updateBulkActionBar(); // Uncomment ini jika ingin reset seleksi tiap render
+            
+            // Cek apakah semua item di halaman ini terpilih untuk update status "Select All"
+            // (Nanti di bawah loop)
+
             const normalizedFilter = filter.toLowerCase();
             const filteredData = data.filter(item => 
                 (item.playerName || '').toLowerCase().includes(normalizedFilter)
             );
 
             // ===== LOGIKA PAGINASI BARU =====
+            // ... (Logika paginasi tetap sama) ...
             const totalItems = filteredData.length;
-            const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE) || 1; // pastikan minimal 1 halaman
+            const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE) || 1; 
 
-            // Pastikan halaman saat ini valid (jika filter mengubah total halaman)
             if (currentHistoryPage > totalPages) {
                 currentHistoryPage = totalPages;
             }
 
             const startIndex = (currentHistoryPage - 1) * ITEMS_PER_PAGE;
             const endIndex = startIndex + ITEMS_PER_PAGE;
-            const pageData = filteredData.slice(startIndex, endIndex); // Ambil hanya data untuk halaman ini
+            const pageData = filteredData.slice(startIndex, endIndex); 
             
-            // Update info paginasi
             updatePaginationControls(totalPages, totalItems);
             // ===================================
 
             if (pageData.length === 0) {
+                // Colspan jadi 8 karena ada kolom checkbox baru
                 if (filter) {
-                    list.innerHTML = '<tr><td colspan="7" class="px-6 py-4 text-center text-sm text-gray-400">Tidak ada transaksi yang cocok dengan pencarian.</td></tr>';
+                    list.innerHTML = '<tr><td colspan="8" class="px-6 py-4 text-center text-sm text-gray-400">Tidak ada transaksi yang cocok dengan pencarian.</td></tr>';
                 } else {
-                    list.innerHTML = '<tr><td colspan="7" class="px-6 py-4 text-center text-sm text-gray-400">Belum ada transaksi.</td></tr>';
+                    list.innerHTML = '<tr><td colspan="8" class="px-6 py-4 text-center text-sm text-gray-400">Belum ada transaksi.</td></tr>';
                 }
                 return;
             }
@@ -993,8 +1067,10 @@
                 transfer: 'bg-green-100 text-green-800',
                 tunai: 'bg-yellow-100 text-yellow-800'
             };
+            
+            let allSelectedOnPage = true;
 
-            pageData.forEach(item => { // <-- Gunakan pageData, bukan filteredData
+            pageData.forEach(item => { 
                 const tr = document.createElement('tr');
                 tr.className = "hover:bg-gray-50 transition-colors duration-150";
                 
@@ -1004,7 +1080,14 @@
                 const paymentStyle = paymentTypeStyles[item.paymentType] || 'bg-gray-100 text-gray-800';
                 const playerName = item.playerName || 'N/A';
                 
+                // Cek apakah item ini sudah dipilih
+                const isChecked = selectedTransactionIds.has(item.id);
+                if (!isChecked) allSelectedOnPage = false;
+
                 tr.innerHTML = `
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <input type="checkbox" value="${item.id}" class="tx-checkbox rounded border-gray-300 text-blue-600 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50" ${isChecked ? 'checked' : ''}>
+                    </td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">${lastUpdate.replace(',', ' - ')}</td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${playerName}</td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">${formatCurrency(item.amount)}</td>
@@ -1020,41 +1103,54 @@
                         <button onclick="showDeleteModal('${item.id}', '${playerName.replace(/'/g, "\\'")}')" class="text-red-600 hover:text-red-900 transition-colors duration-150">Hapus</button>
                     </td>
                 `;
+                
+                // Tambahkan event listener untuk checkbox individual
+                const checkbox = tr.querySelector('.tx-checkbox');
+                checkbox.addEventListener('change', (e) => {
+                    if (e.target.checked) {
+                        selectedTransactionIds.add(item.id);
+                    } else {
+                        selectedTransactionIds.delete(item.id);
+                        selectAllCheckbox.checked = false; // Uncheck header jika salah satu di-uncheck
+                    }
+                    updateBulkActionBar();
+                });
+
                 list.appendChild(tr);
             });
-        }
-
-        // ===== FUNGSI DAN LISTENER BARU UNTUK PAGINASI =====
-        function updatePaginationControls(totalPages, totalItems) {
-            historyPageInfo.textContent = `Hal. ${currentHistoryPage} dari ${totalPages} (${totalItems} total)`;
             
-            historyPrevBtn.disabled = (currentHistoryPage === 1);
-            historyNextBtn.disabled = (currentHistoryPage === totalPages);
+            // Update status "Select All" checkbox berdasarkan halaman ini
+            selectAllCheckbox.checked = (pageData.length > 0 && allSelectedOnPage);
         }
 
+        // Listener untuk search
+        historySearch.addEventListener('input', (e) => {
+            // Reset seleksi saat mencari agar user tidak bingung menghapus data yang tidak terlihat
+            selectedTransactionIds.clear(); 
+            updateBulkActionBar();
+            
+            currentHistoryPage = 1; 
+            renderHistoryList(allTransactions, e.target.value);
+        });
+        
+        // Update event listener paginasi untuk mereset seleksi (Opsional, untuk keamanan)
         historyPrevBtn.addEventListener('click', () => {
             if (currentHistoryPage > 1) {
+                selectedTransactionIds.clear(); // Reset seleksi saat pindah halaman (pilihan aman)
+                updateBulkActionBar();
                 currentHistoryPage--;
                 renderHistoryList(allTransactions, historySearch.value);
             }
         });
 
         historyNextBtn.addEventListener('click', () => {
-            // Hitung ulang totalPages berdasarkan filter saat ini
-            const totalItems = allTransactions.filter(item => (item.playerName || '').toLowerCase().includes(historySearch.value.toLowerCase())).length;
-            const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE) || 1;
-
+            const totalPages = Math.ceil(allTransactions.filter(item => (item.playerName || '').toLowerCase().includes(historySearch.value.toLowerCase())).length / ITEMS_PER_PAGE) || 1;
             if (currentHistoryPage < totalPages) {
+                selectedTransactionIds.clear(); // Reset seleksi saat pindah halaman
+                updateBulkActionBar();
                 currentHistoryPage++;
                 renderHistoryList(allTransactions, historySearch.value);
             }
-        });
-        // =====================================================
-
-        // Listener untuk search
-        historySearch.addEventListener('input', (e) => {
-            currentHistoryPage = 1; // Reset ke halaman 1 setiap kali mencari
-            renderHistoryList(allTransactions, e.target.value);
         });
 
         // Render daftar di sidebar
