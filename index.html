@@ -54,7 +54,7 @@
         <!-- Sidebar -->
         <aside class="w-64 bg-gray-900 text-gray-300 flex flex-col fixed inset-y-0 left-0 z-30 transform -translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out" id="sidebar">
             <div class="h-16 flex items-center justify-between px-6 bg-gray-900 border-b border-gray-800">
-                <span class="text-2xl font-bold text-white">Tim Keuangan</span>
+                <span class="text-2xl font-bold text-white">TimKeuangan</span>
                 <button id="close-sidebar-btn" class="md:hidden p-1 text-gray-400 hover:text-white rounded-full focus:outline-none focus:ring-2 focus:ring-white">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                 </button>
@@ -68,7 +68,6 @@
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                     <span class="ml-3 font-medium">Riwayat Pemasukan</span>
                 </a>
-                <!-- Menu Baru: Riwayat Pengeluaran -->
                 <a href="#" id="nav-expense-history" class="flex items-center px-4 py-3 rounded-lg text-gray-300 hover:bg-gray-700 hover:text-white transition-colors duration-200">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                     <span class="ml-3 font-medium">Riwayat Pengeluaran</span>
@@ -97,15 +96,22 @@
                     
                     <!-- ===== Dashboard View ===== -->
                     <div id="dashboard-view" class="">
-                        <!-- ... (Dashboard Content remains same) ... -->
-                        <div class="flex flex-col md:flex-row md:items-center justify-between mb-6 space-y-4 md:space-y-0">
-                            <h1 class="text-3xl font-bold text-gray-900">Dashboard</h1>
+                        <div class="flex flex-col lg:flex-row lg:items-center justify-between mb-6 space-y-4 lg:space-y-0">
+                            <div class="flex items-center space-x-4">
+                                <h1 class="text-3xl font-bold text-gray-900">Dashboard</h1>
+                                <!-- Filter Bulan Dashboard -->
+                                <div class="flex items-center space-x-2 bg-white px-3 py-1 rounded-lg shadow-sm border border-gray-200">
+                                    <span class="text-xs text-gray-500 uppercase font-bold">Periode:</span>
+                                    <input type="month" id="dashboard-month-filter" class="text-sm border-none focus:ring-0 text-gray-700 bg-transparent cursor-pointer">
+                                </div>
+                            </div>
+                            
                             <div class="flex space-x-3">
-                                <button id="add-expense-btn-main" class="flex items-center px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-medium rounded-lg shadow-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-colors duration-200">
+                                <button id="add-expense-btn-main" class="flex items-center px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-medium rounded-lg shadow-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-colors duration-200 text-sm md:text-base">
                                     <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                                     Catat Pengeluaran
                                 </button>
-                                <button id="add-transaction-btn-main" class="flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors duration-200">
+                                <button id="add-transaction-btn-main" class="flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors duration-200 text-sm md:text-base">
                                     <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
                                     Tambah Pemasukan
                                 </button>
@@ -174,7 +180,14 @@
                     <!-- ===== History View (Income) ===== -->
                     <div id="history-view" class="hidden">
                         <div class="bg-white rounded-lg shadow-lg">
-                            <h3 class="px-6 py-4 text-lg font-semibold text-gray-800 border-b border-gray-200">Riwayat Pemasukan</h3>
+                            <div class="px-6 py-4 border-b border-gray-200 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                                <h3 class="text-lg font-semibold text-gray-800">Riwayat Pemasukan</h3>
+                                <!-- Filter Bulan History -->
+                                <div class="flex items-center space-x-2">
+                                    <span class="text-xs text-gray-500 uppercase font-bold">Filter:</span>
+                                    <input type="month" id="history-month-filter" class="text-sm border border-gray-300 rounded px-2 py-1 focus:ring-blue-500 focus:border-blue-500 text-gray-700">
+                                </div>
+                            </div>
                             
                             <div class="px-6 py-4">
                                 <input id="history-search" type="text" placeholder="Cari berdasarkan nama pemain..." class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors duration-200">
@@ -215,10 +228,17 @@
                         </div>
                     </div>
 
-                    <!-- ===== Expense History View (New) ===== -->
+                    <!-- ===== Expense History View ===== -->
                     <div id="expense-history-view" class="hidden">
                         <div class="bg-white rounded-lg shadow-lg">
-                            <h3 class="px-6 py-4 text-lg font-semibold text-gray-800 border-b border-gray-200">Riwayat Pengeluaran</h3>
+                            <div class="px-6 py-4 border-b border-gray-200 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                                <h3 class="text-lg font-semibold text-gray-800">Riwayat Pengeluaran</h3>
+                                <!-- Filter Bulan Expense -->
+                                <div class="flex items-center space-x-2">
+                                    <span class="text-xs text-gray-500 uppercase font-bold">Filter:</span>
+                                    <input type="month" id="expense-history-month-filter" class="text-sm border border-gray-300 rounded px-2 py-1 focus:ring-red-500 focus:border-red-500 text-gray-700">
+                                </div>
+                            </div>
                             
                             <div class="px-6 py-4">
                                 <input id="expense-history-search" type="text" placeholder="Cari berdasarkan keterangan..." class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 transition-colors duration-200">
@@ -356,16 +376,16 @@
         let cashFlowChart = null;
         
         let currentEditingId = null;
-        let currentEditingExpenseId = null; // New for expense edit
+        let currentEditingExpenseId = null;
         let currentDeleteId = null;
-        let deleteCollection = ''; // New to track which collection to delete from
+        let deleteCollection = '';
 
         let currentHistoryPage = 1;
-        let currentExpensePage = 1; // New for expense pagination
+        let currentExpensePage = 1;
         const ITEMS_PER_PAGE = 10;
         
         let selectedTransactionIds = new Set();
-        let selectedExpenseIds = new Set(); // New for expense bulk delete
+        let selectedExpenseIds = new Set();
 
         // DOM Elements Getter
         const get = (id) => document.getElementById(id);
@@ -384,12 +404,17 @@
         const adminEmailDisplay = get('admin-email-display');
         const dashboardView = get('dashboard-view');
         const historyView = get('history-view');
-        const expenseHistoryView = get('expense-history-view'); // New
+        const expenseHistoryView = get('expense-history-view');
         
         const navDashboard = get('nav-dashboard');
         const navHistory = get('nav-history');
-        const navExpenseHistory = get('nav-expense-history'); // New
+        const navExpenseHistory = get('nav-expense-history');
         
+        // Filters
+        const dashboardMonthFilter = get('dashboard-month-filter');
+        const historyMonthFilter = get('history-month-filter');
+        const expenseHistoryMonthFilter = get('expense-history-month-filter');
+
         // Transaction Modal
         const transactionModal = get('transaction-modal');
         const transactionForm = get('transaction-form');
@@ -399,7 +424,7 @@
         // Expense Modal
         const expenseModal = get('expense-modal');
         const expenseForm = get('expense-form');
-        const expenseModalTitle = get('expense-modal-title'); // New
+        const expenseModalTitle = get('expense-modal-title');
         const saveExpenseBtn = get('save-expense-btn');
 
         // Delete Modal
@@ -410,6 +435,16 @@
         // Helpers
         const formatCurrency = (val) => 'Rp ' + (val || 0).toLocaleString('id-ID');
         
+        // Set Month Inputs to Current Month
+        const setCurrentMonth = () => {
+            const now = new Date();
+            const monthStr = now.toISOString().slice(0, 7); // YYYY-MM
+            if(dashboardMonthFilter) dashboardMonthFilter.value = monthStr;
+            if(historyMonthFilter) historyMonthFilter.value = monthStr;
+            if(expenseHistoryMonthFilter) expenseHistoryMonthFilter.value = monthStr;
+        };
+        setCurrentMonth();
+
         // --- AUTHENTICATION ---
         onAuthStateChanged(auth, (user) => {
             if (user) {
@@ -454,14 +489,15 @@
             if (view === 'dashboard') {
                 dashboardView.classList.remove('hidden');
                 navDashboard.classList.add('bg-gray-700', 'text-white');
+                refreshDashboard(); // Refresh on view
             } else if (view === 'history') {
                 historyView.classList.remove('hidden');
                 navHistory.classList.add('bg-gray-700', 'text-white');
-                currentHistoryPage = 1; renderHistoryList(allTransactions, get('history-search').value);
+                currentHistoryPage = 1; renderHistoryList();
             } else if (view === 'expense-history') {
                 expenseHistoryView.classList.remove('hidden');
                 navExpenseHistory.classList.add('bg-gray-700', 'text-white');
-                currentExpensePage = 1; renderExpenseHistoryList(allExpenses, get('expense-history-search').value);
+                currentExpensePage = 1; renderExpenseHistoryList();
             }
         };
         navDashboard.addEventListener('click', (e) => { e.preventDefault(); showView('dashboard'); });
@@ -471,13 +507,34 @@
         get('open-sidebar-btn').addEventListener('click', () => sidebar.classList.remove('-translate-x-full'));
         get('close-sidebar-btn').addEventListener('click', () => sidebar.classList.add('-translate-x-full'));
 
+        // --- FILTERS ---
+        dashboardMonthFilter.addEventListener('change', () => refreshDashboard());
+        historyMonthFilter.addEventListener('change', () => { currentHistoryPage = 1; renderHistoryList(); });
+        expenseHistoryMonthFilter.addEventListener('change', () => { currentExpensePage = 1; renderExpenseHistoryList(); });
+
+        const filterByMonth = (data, monthStr) => {
+            if (!monthStr) return data;
+            return data.filter(item => {
+                let d = null;
+                if (item.date && item.date.toDate) d = item.date.toDate();
+                else if (item.lastUpdatedAt && item.lastUpdatedAt.toDate) d = item.lastUpdatedAt.toDate();
+                else if (item.createdAt && item.createdAt.toDate) d = item.createdAt.toDate();
+                
+                if (d) {
+                    const itemMonth = d.toISOString().slice(0, 7);
+                    return itemMonth === monthStr;
+                }
+                return false;
+            });
+        };
+
         // --- DATA LISTENERS ---
         function setupTransactionListener() {
             const q = query(collection(db, `artifacts/${appId}/public/data/transactions`), orderBy('lastUpdatedAt', 'desc'));
             transactionsListener = onSnapshot(q, (snapshot) => {
                 allTransactions = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                 refreshDashboard();
-                renderHistoryList(allTransactions, get('history-search').value);
+                renderHistoryList();
             });
         }
 
@@ -486,24 +543,28 @@
             expensesListener = onSnapshot(q, (snapshot) => {
                 allExpenses = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                 refreshDashboard();
-                renderExpenseHistoryList(allExpenses, get('expense-history-search').value);
+                renderExpenseHistoryList();
             });
         }
 
         function refreshDashboard() {
-            const totalIncome = allTransactions.reduce((s, i) => s + (i.amount || 0), 0);
-            const totalExpense = allExpenses.reduce((s, i) => s + (i.amount || 0), 0);
+            const month = dashboardMonthFilter.value;
+            const filteredTransactions = filterByMonth(allTransactions, month);
+            const filteredExpenses = filterByMonth(allExpenses, month);
+
+            const totalIncome = filteredTransactions.reduce((s, i) => s + (i.amount || 0), 0);
+            const totalExpense = filteredExpenses.reduce((s, i) => s + (i.amount || 0), 0);
             const balance = totalIncome - totalExpense;
 
             get('total-revenue').textContent = formatCurrency(totalIncome);
             get('total-expense').textContent = formatCurrency(totalExpense); 
             get('net-balance').textContent = formatCurrency(balance); 
-            get('total-transactions').textContent = allTransactions.length;
+            get('total-transactions').textContent = filteredTransactions.length;
             
-            updatePaymentChart(allTransactions);
-            updateCashFlowChart(allTransactions, allExpenses);
-            updateRecentActivity(allTransactions); 
-            renderDashboardTable(allTransactions);
+            updatePaymentChart(filteredTransactions);
+            updateCashFlowChart(filteredTransactions, filteredExpenses);
+            updateRecentActivity(filteredTransactions); 
+            renderDashboardTable(filteredTransactions);
         }
 
         // --- CHARTS ---
@@ -742,7 +803,10 @@
         }
 
         // --- RENDER LISTS ---
-        function renderHistoryList(data, filter) {
+        function renderHistoryList() {
+            const data = filterByMonth(allTransactions, historyMonthFilter.value);
+            const filter = get('history-search').value;
+            
             const list = get('history-list-tbody'); list.innerHTML = '';
             if(filter) { selectedTransactionIds.clear(); updateBulkUI(); }
             
@@ -782,15 +846,19 @@
                 list.appendChild(tr);
             });
         }
-        get('history-search').addEventListener('input', (e) => { currentHistoryPage = 1; renderHistoryList(allTransactions, e.target.value); });
-        get('history-prev-btn').addEventListener('click', () => { if(currentHistoryPage > 1) { currentHistoryPage--; renderHistoryList(allTransactions, get('history-search').value); }});
+        get('history-search').addEventListener('input', () => { currentHistoryPage = 1; renderHistoryList(); });
+        get('history-prev-btn').addEventListener('click', () => { if(currentHistoryPage > 1) { currentHistoryPage--; renderHistoryList(); }});
         get('history-next-btn').addEventListener('click', () => { 
-            const filtered = allTransactions.filter(i => (i.playerName||'').toLowerCase().includes(get('history-search').value.toLowerCase()));
-            if(currentHistoryPage < Math.ceil(filtered.length/ITEMS_PER_PAGE)) { currentHistoryPage++; renderHistoryList(allTransactions, get('history-search').value); }
+            const data = filterByMonth(allTransactions, historyMonthFilter.value);
+            const filtered = data.filter(i => (i.playerName||'').toLowerCase().includes(get('history-search').value.toLowerCase()));
+            if(currentHistoryPage < Math.ceil(filtered.length/ITEMS_PER_PAGE)) { currentHistoryPage++; renderHistoryList(); }
         });
 
         // --- RENDER EXPENSE LIST ---
-        function renderExpenseHistoryList(data, filter) {
+        function renderExpenseHistoryList() {
+            const data = filterByMonth(allExpenses, expenseHistoryMonthFilter.value);
+            const filter = get('expense-history-search').value;
+            
             const list = get('expense-history-list-tbody'); list.innerHTML = '';
             if(filter) { selectedExpenseIds.clear(); updateExpenseBulkUI(); }
             
@@ -828,11 +896,12 @@
                 list.appendChild(tr);
             });
         }
-        get('expense-history-search').addEventListener('input', (e) => { currentExpensePage = 1; renderExpenseHistoryList(allExpenses, e.target.value); });
-        get('expense-history-prev-btn').addEventListener('click', () => { if(currentExpensePage > 1) { currentExpensePage--; renderExpenseHistoryList(allExpenses, get('expense-history-search').value); }});
+        get('expense-history-search').addEventListener('input', () => { currentExpensePage = 1; renderExpenseHistoryList(); });
+        get('expense-history-prev-btn').addEventListener('click', () => { if(currentExpensePage > 1) { currentExpensePage--; renderExpenseHistoryList(); }});
         get('expense-history-next-btn').addEventListener('click', () => { 
-            const filtered = allExpenses.filter(i => (i.description||'').toLowerCase().includes(get('expense-history-search').value.toLowerCase()));
-            if(currentExpensePage < Math.ceil(filtered.length/ITEMS_PER_PAGE)) { currentExpensePage++; renderExpenseHistoryList(allExpenses, get('expense-history-search').value); }
+            const data = filterByMonth(allExpenses, expenseHistoryMonthFilter.value);
+            const filtered = data.filter(i => (i.description||'').toLowerCase().includes(get('expense-history-search').value.toLowerCase()));
+            if(currentExpensePage < Math.ceil(filtered.length/ITEMS_PER_PAGE)) { currentExpensePage++; renderExpenseHistoryList(); }
         });
 
         function updateRecentActivity(data) {
