@@ -83,7 +83,7 @@
                 <button id="open-sidebar-btn" class="p-1 text-gray-600 hover:text-gray-900 rounded-full focus:outline-none focus:ring-2 focus:ring-gray-400">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
                 </button>
-                <span class="text-xl font-bold text-gray-800">TimKeuangan</span>
+                <span class="text-xl font-bold text-gray-800">Tim Keuangan</span>
                 <div class="w-6"></div>
             </header>
 
@@ -439,13 +439,14 @@
             const balance = totalIncome - totalExpense;
 
             get('total-revenue').textContent = formatCurrency(totalIncome);
-            get('total-expense').textContent = formatCurrency(totalExpense); // Update Card Pengeluaran
-            get('net-balance').textContent = formatCurrency(balance); // Update Card Saldo
+            get('total-expense').textContent = formatCurrency(totalExpense); 
+            get('net-balance').textContent = formatCurrency(balance); 
             get('total-transactions').textContent = allTransactions.length;
             
             updatePaymentChart(allTransactions);
-            updateCashFlowChart(totalIncome, totalExpense); // Update Chart Baru
-            updateRecentActivity(allTransactions); // Gabung activity nanti bisa opsi lanjutan
+            // UPDATE: Kirim data mentah (array), bukan total, agar bisa diolah per tanggal
+            updateCashFlowChart(allTransactions, allExpenses); 
+            updateRecentActivity(allTransactions); 
             renderDashboardTable(allTransactions);
         }
 
@@ -461,30 +462,149 @@
             else transactionChart = new Chart(ctx, { type: 'doughnut', data: chartData, options: { responsive: true, maintainAspectRatio: false } });
         }
 
-        function updateCashFlowChart(income, expense) {
+        // FUNGSI BARU: Modern Area Chart (Trend per Tanggal)
+        function updateCashFlowChart(transactions, expenses) {
             const ctx = get('cash-flow-chart').getContext('2d');
-            const chartData = {
-                labels: ['Pemasukan', 'Pengeluaran'],
-                datasets: [{
-                    label: 'Nominal (Rp)',
-                    data: [income, expense],
-                    backgroundColor: ['#3B82F6', '#EF4444'], // Biru & Merah
-                    borderRadius: 5
-                }]
-            };
-            if (cashFlowChart) { cashFlowChart.data = chartData; cashFlowChart.update(); }
-            else {
-                cashFlowChart = new Chart(ctx, {
-                    type: 'bar',
-                    data: chartData,
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: { legend: { display: false } },
-                        scales: { y: { beginAtZero: true } }
+            
+            // 1. Buat Peta Data berdasarkan Tanggal
+            const rawMap = {};
+            
+            // Helper untuk memasukkan data ke map
+            const processData = (list, type) => {
+                list.forEach(item => {
+                    let d = null;
+                    // Cek berbagai kemungkinan nama field tanggal
+                    if (item.date && item.date.toDate) d = item.date.toDate();
+                    else if (item.lastUpdatedAt && item.lastUpdatedAt.toDate) d = item.lastUpdatedAt.toDate();
+                    else if (item.createdAt && item.createdAt.toDate) d = item.createdAt.toDate();
+                    
+                    if (d) {
+                        // Kunci tanggal (tanpa jam) untuk pengelompokan
+                        const key = new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime();
+                        if (!rawMap[key]) rawMap[key] = { income: 0, expense: 0, dateObj: d };
+                        rawMap[key][type] += (item.amount || 0);
                     }
                 });
+            };
+
+            processData(transactions, 'income');
+            processData(expenses, 'expense');
+
+            // 2. Urutkan Tanggal dari Lama ke Baru
+            const sortedKeys = Object.keys(rawMap).sort();
+            
+            // 3. Siapkan Array untuk Chart
+            const labels = sortedKeys.map(k => rawMap[k].dateObj.toLocaleDateString('id-ID', { day: 'numeric', month: 'short' })); // Contoh: 25 Nov
+            const incomeData = sortedKeys.map(k => rawMap[k].income);
+            const expenseData = sortedKeys.map(k => rawMap[k].expense);
+
+            // 4. Buat Gradasi Warna (Efek Modern)
+            const gradientIncome = ctx.createLinearGradient(0, 0, 0, 300);
+            gradientIncome.addColorStop(0, 'rgba(59, 130, 246, 0.4)'); // Biru Pudar
+            gradientIncome.addColorStop(1, 'rgba(59, 130, 246, 0.0)'); // Transparan
+
+            const gradientExpense = ctx.createLinearGradient(0, 0, 0, 300);
+            gradientExpense.addColorStop(0, 'rgba(239, 68, 68, 0.4)'); // Merah Pudar
+            gradientExpense.addColorStop(1, 'rgba(239, 68, 68, 0.0)'); // Transparan
+
+            const chartData = {
+                labels: labels,
+                datasets: [
+                    {
+                        label: 'Pemasukan',
+                        data: incomeData,
+                        borderColor: '#3B82F6', // Biru Solid
+                        backgroundColor: gradientIncome,
+                        borderWidth: 3,
+                        tension: 0.4, // Membuat garis melengkung halus (Spline)
+                        fill: true,   // Isi warna di bawah garis
+                        pointBackgroundColor: '#fff',
+                        pointBorderColor: '#3B82F6',
+                        pointBorderWidth: 2,
+                        pointRadius: 4,
+                        pointHoverRadius: 6
+                    },
+                    {
+                        label: 'Pengeluaran',
+                        data: expenseData,
+                        borderColor: '#EF4444', // Merah Solid
+                        backgroundColor: gradientExpense,
+                        borderWidth: 3,
+                        tension: 0.4,
+                        fill: true,
+                        pointBackgroundColor: '#fff',
+                        pointBorderColor: '#EF4444',
+                        pointBorderWidth: 2,
+                        pointRadius: 4,
+                        pointHoverRadius: 6
+                    }
+                ]
+            };
+
+            // 5. Render Chart
+            if (cashFlowChart) {
+                cashFlowChart.destroy(); // Hancurkan chart lama untuk ganti tipe
             }
+            
+            cashFlowChart = new Chart(ctx, {
+                type: 'line', // Ubah jadi Line chart
+                data: chartData,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false,
+                    },
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                            align: 'end',
+                            labels: { usePointStyle: true, boxWidth: 8 }
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                            titleColor: '#1f2937',
+                            bodyColor: '#1f2937',
+                            borderColor: '#e5e7eb',
+                            borderWidth: 1,
+                            padding: 10,
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) label += ': ';
+                                    if (context.parsed.y !== null) {
+                                        label += new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' }).format(context.parsed.y);
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: { display: false }, // Hilangkan grid vertikal agar bersih
+                            ticks: { color: '#9ca3af' }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            border: { display: false }, // Hilangkan garis border Y
+                            grid: {
+                                color: '#f3f4f6',
+                                borderDash: [5, 5] // Grid putus-putus halus
+                            },
+                            ticks: {
+                                color: '#9ca3af',
+                                callback: function(value) {
+                                    if(value >= 1000000) return (value/1000000) + 'jt';
+                                    if(value >= 1000) return (value/1000) + 'rb';
+                                    return value;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
         }
 
         // --- MODALS & FORMS (INCOME) ---
