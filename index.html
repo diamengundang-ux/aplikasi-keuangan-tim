@@ -104,36 +104,51 @@
                         <!-- Header Section (Responsive Update) -->
                         <div class="flex flex-col xl:flex-row xl:items-center justify-between mb-8 gap-4">
                             <!-- Title & Filter Group -->
-                            <div class="flex flex-col sm:flex-row sm:items-center gap-4 w-full xl:w-auto">
+                            <div class="flex flex-col sm:flex-row sm:items-center gap-4 w-full xl:w-auto overflow-x-auto pb-2 sm:pb-0">
                                 <h1 class="text-2xl md:text-3xl font-bold text-gray-900 whitespace-nowrap">Dashboard</h1>
                                 
-                                <!-- Filter Periode (Updated with Range) -->
-                                <div class="flex flex-col sm:flex-row items-start sm:items-center gap-2 bg-white px-3 py-2 rounded-lg shadow-sm border border-gray-200 w-full sm:w-auto overflow-x-auto">
-                                    <span class="text-xs text-gray-500 uppercase font-bold whitespace-nowrap">Filter:</span>
+                                <!-- Filter Container (Periode + Payment Type) -->
+                                <div class="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
                                     
-                                    <!-- Selector Tipe Periode -->
-                                    <select id="dashboard-period-type" class="text-sm border-none focus:ring-0 text-gray-700 bg-transparent cursor-pointer outline-none font-medium pr-6 py-0">
-                                        <option value="month">Per Bulan</option>
-                                        <option value="week">Per Minggu</option>
-                                        <option value="day">Per Hari</option>
-                                        <option value="range">Rentang Tanggal</option> <!-- Opsi Baru -->
-                                    </select>
-                                    
-                                    <div class="hidden sm:block w-px h-4 bg-gray-300 mx-2"></div>
-                                    
-                                    <!-- Input Containers -->
-                                    <div id="dashboard-single-inputs" class="flex items-center">
-                                        <input type="month" id="dashboard-month-filter" class="text-sm border-none focus:ring-0 text-gray-700 bg-transparent cursor-pointer outline-none py-0">
-                                        <input type="week" id="dashboard-week-filter" class="hidden text-sm border-none focus:ring-0 text-gray-700 bg-transparent cursor-pointer outline-none py-0">
-                                        <input type="date" id="dashboard-day-filter" class="hidden text-sm border-none focus:ring-0 text-gray-700 bg-transparent cursor-pointer outline-none py-0">
+                                    <!-- Filter Periode (Updated with Range) -->
+                                    <div class="flex flex-col sm:flex-row items-start sm:items-center gap-2 bg-white px-3 py-2 rounded-lg shadow-sm border border-gray-200">
+                                        <span class="text-xs text-gray-500 uppercase font-bold whitespace-nowrap">Periode:</span>
+                                        
+                                        <!-- Selector Tipe Periode -->
+                                        <select id="dashboard-period-type" class="text-sm border-none focus:ring-0 text-gray-700 bg-transparent cursor-pointer outline-none font-medium pr-6 py-0">
+                                            <option value="month">Per Bulan</option>
+                                            <option value="week">Per Minggu</option>
+                                            <option value="day">Per Hari</option>
+                                            <option value="range">Rentang Tanggal</option>
+                                        </select>
+                                        
+                                        <div class="hidden sm:block w-px h-4 bg-gray-300 mx-2"></div>
+                                        
+                                        <!-- Input Containers -->
+                                        <div id="dashboard-single-inputs" class="flex items-center">
+                                            <input type="month" id="dashboard-month-filter" class="text-sm border-none focus:ring-0 text-gray-700 bg-transparent cursor-pointer outline-none py-0">
+                                            <input type="week" id="dashboard-week-filter" class="hidden text-sm border-none focus:ring-0 text-gray-700 bg-transparent cursor-pointer outline-none py-0">
+                                            <input type="date" id="dashboard-day-filter" class="hidden text-sm border-none focus:ring-0 text-gray-700 bg-transparent cursor-pointer outline-none py-0">
+                                        </div>
+                                        
+                                        <!-- Range Inputs (Hidden by default) -->
+                                        <div id="dashboard-range-inputs" class="hidden flex items-center gap-2 text-sm">
+                                            <input type="date" id="dashboard-start-date" class="border border-gray-300 rounded px-2 py-1 focus:ring-blue-500 focus:border-blue-500 text-gray-700 w-32">
+                                            <span class="text-gray-400">-</span>
+                                            <input type="date" id="dashboard-end-date" class="border border-gray-300 rounded px-2 py-1 focus:ring-blue-500 focus:border-blue-500 text-gray-700 w-32">
+                                            <button id="dashboard-apply-range" class="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700 text-xs font-medium">Terapkan</button>
+                                        </div>
                                     </div>
-                                    
-                                    <!-- Range Inputs (Hidden by default) -->
-                                    <div id="dashboard-range-inputs" class="hidden flex items-center gap-2 text-sm">
-                                        <input type="date" id="dashboard-start-date" class="border border-gray-300 rounded px-2 py-1 focus:ring-blue-500 focus:border-blue-500 text-gray-700 w-32">
-                                        <span class="text-gray-400">-</span>
-                                        <input type="date" id="dashboard-end-date" class="border border-gray-300 rounded px-2 py-1 focus:ring-blue-500 focus:border-blue-500 text-gray-700 w-32">
-                                        <button id="dashboard-apply-range" class="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700 text-xs font-medium">Terapkan</button>
+
+                                    <!-- Filter Payment Type (New) -->
+                                    <div class="flex items-center space-x-2 bg-white px-3 py-2 rounded-lg shadow-sm border border-gray-200">
+                                        <span class="text-xs text-gray-500 uppercase font-bold whitespace-nowrap">Tipe:</span>
+                                        <select id="dashboard-payment-type" class="text-sm border-none focus:ring-0 text-gray-700 bg-transparent cursor-pointer outline-none font-medium pr-6 py-0">
+                                            <option value="all">Semua</option>
+                                            <option value="qris">QRIS</option>
+                                            <option value="transfer">Transfer</option>
+                                            <option value="tunai">Tunai</option>
+                                        </select>
                                     </div>
                                 </div>
                             </div>
@@ -219,11 +234,12 @@
                                                 <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Tanggal</th>
                                                 <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Nama</th>
                                                 <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Nominal</th>
+                                                <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Jenis</th>
                                                 <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Ket</th>
                                             </tr>
                                         </thead>
                                         <tbody id="dashboard-recent-tx-list" class="bg-white divide-y divide-gray-100">
-                                            <tr><td colspan="4" class="px-6 py-8 text-center text-sm text-gray-400">Memuat data...</td></tr>
+                                            <tr><td colspan="5" class="px-6 py-8 text-center text-sm text-gray-400">Memuat data...</td></tr>
                                         </tbody>
                                     </table>
                                 </div>
@@ -238,25 +254,44 @@
                             <div class="px-6 py-5 border-b border-gray-100 flex flex-col xl:flex-row xl:items-center justify-between gap-4">
                                 <h3 class="text-lg font-bold text-gray-800">Riwayat Pemasukan</h3>
                                 
-                                <div class="flex flex-col sm:flex-row items-start sm:items-center gap-2 bg-white px-3 py-2 rounded-lg border border-gray-200 w-full xl:w-auto overflow-x-auto">
-                                    <span class="text-xs text-gray-500 uppercase font-bold whitespace-nowrap">Filter:</span>
-                                    <select id="history-period-type" class="text-sm border-none focus:ring-0 text-gray-700 bg-transparent cursor-pointer outline-none font-medium pr-6 py-0">
-                                        <option value="month">Per Bulan</option>
-                                        <option value="week">Per Minggu</option>
-                                        <option value="day">Per Hari</option>
-                                        <option value="range">Rentang Tanggal</option>
-                                    </select>
-                                    <div class="hidden sm:block w-px h-4 bg-gray-300 mx-2"></div>
-                                    <div id="history-single-inputs" class="flex items-center">
-                                        <input type="month" id="history-month-filter" class="text-sm border-none focus:ring-0 text-gray-700 bg-transparent cursor-pointer outline-none py-0">
-                                        <input type="week" id="history-week-filter" class="hidden text-sm border-none focus:ring-0 text-gray-700 bg-transparent cursor-pointer outline-none py-0">
-                                        <input type="date" id="history-day-filter" class="hidden text-sm border-none focus:ring-0 text-gray-700 bg-transparent cursor-pointer outline-none py-0">
-                                    </div>
-                                    <div id="history-range-inputs" class="hidden flex items-center gap-2 text-sm">
-                                        <input type="date" id="history-start-date" class="border border-gray-300 rounded px-2 py-1 focus:ring-blue-500 text-gray-700 w-28">
-                                        <span class="text-gray-400">-</span>
-                                        <input type="date" id="history-end-date" class="border border-gray-300 rounded px-2 py-1 focus:ring-blue-500 text-gray-700 w-28">
-                                        <button id="history-apply-range" class="bg-blue-600 text-white px-2 py-1 rounded hover:bg-blue-700 text-xs">Go</button>
+                                <div class="flex flex-col sm:flex-row items-start sm:items-center gap-2 bg-white px-3 py-2 rounded-lg border border-gray-200 w-full xl:w-auto overflow-x-auto pb-2 sm:pb-0">
+                                    <!-- Filter Container -->
+                                    <div class="flex flex-col sm:flex-row gap-2">
+                                        <!-- Filter Periode -->
+                                        <div class="flex items-center gap-2">
+                                            <span class="text-xs text-gray-500 uppercase font-bold whitespace-nowrap">Filter:</span>
+                                            <select id="history-period-type" class="text-sm border-none focus:ring-0 text-gray-700 bg-transparent cursor-pointer outline-none font-medium pr-6 py-0">
+                                                <option value="month">Per Bulan</option>
+                                                <option value="week">Per Minggu</option>
+                                                <option value="day">Per Hari</option>
+                                                <option value="range">Rentang Tanggal</option>
+                                            </select>
+                                            <div class="hidden sm:block w-px h-4 bg-gray-300 mx-2"></div>
+                                            <div id="history-single-inputs" class="flex items-center">
+                                                <input type="month" id="history-month-filter" class="text-sm border-none focus:ring-0 text-gray-700 bg-transparent cursor-pointer outline-none py-0">
+                                                <input type="week" id="history-week-filter" class="hidden text-sm border-none focus:ring-0 text-gray-700 bg-transparent cursor-pointer outline-none py-0">
+                                                <input type="date" id="history-day-filter" class="hidden text-sm border-none focus:ring-0 text-gray-700 bg-transparent cursor-pointer outline-none py-0">
+                                            </div>
+                                            <div id="history-range-inputs" class="hidden flex items-center gap-2 text-sm">
+                                                <input type="date" id="history-start-date" class="border border-gray-300 rounded px-2 py-1 focus:ring-blue-500 text-gray-700 w-28">
+                                                <span class="text-gray-400">-</span>
+                                                <input type="date" id="history-end-date" class="border border-gray-300 rounded px-2 py-1 focus:ring-blue-500 text-gray-700 w-28">
+                                                <button id="history-apply-range" class="bg-blue-600 text-white px-2 py-1 rounded hover:bg-blue-700 text-xs">Go</button>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="hidden sm:block w-px h-6 bg-gray-300 mx-2"></div>
+
+                                        <!-- Filter Payment (New) -->
+                                        <div class="flex items-center gap-2">
+                                            <span class="text-xs text-gray-500 uppercase font-bold whitespace-nowrap">Tipe:</span>
+                                            <select id="history-payment-type" class="text-sm border-none focus:ring-0 text-gray-700 bg-transparent cursor-pointer outline-none font-medium pr-6 py-0">
+                                                <option value="all">Semua</option>
+                                                <option value="qris">QRIS</option>
+                                                <option value="transfer">Transfer</option>
+                                                <option value="tunai">Tunai</option>
+                                            </select>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -522,6 +557,7 @@
         
         // Filters Dashboard
         const dashboardPeriodType = get('dashboard-period-type');
+        const dashboardPaymentType = get('dashboard-payment-type');
         const dashboardSingleInputs = get('dashboard-single-inputs');
         const dashboardRangeInputs = get('dashboard-range-inputs');
         const dashboardMonthFilter = get('dashboard-month-filter');
@@ -533,6 +569,7 @@
 
         // Filters History Income
         const historyPeriodType = get('history-period-type');
+        const historyPaymentType = get('history-payment-type');
         const historySingleInputs = get('history-single-inputs');
         const historyRangeInputs = get('history-range-inputs');
         const historyMonthFilter = get('history-month-filter');
@@ -579,7 +616,6 @@
             const monthStr = now.toISOString().slice(0, 7);
             const dayStr = now.toISOString().slice(0, 10);
 
-            // Helper Week
             const getWeekStr = (d) => {
                 const date = new Date(d.getTime());
                 date.setHours(0, 0, 0, 0);
@@ -594,7 +630,6 @@
             [dashboardWeekFilter, historyWeekFilter, expenseHistoryWeekFilter].forEach(el => el.value = weekStr);
             [dashboardDayFilter, historyDayFilter, expenseHistoryDayFilter].forEach(el => el.value = dayStr);
             
-            // Set default range to current month start/end
             const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1).toISOString().slice(0, 10);
             const endOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).toISOString().slice(0, 10);
             [dashboardStartDate, historyStartDate, expenseStartDate].forEach(el => el.value = startOfMonth);
@@ -613,7 +648,6 @@
             const applyBtn = get(applyId);
 
             select.addEventListener('change', () => {
-                // Hide all inputs first
                 monthIn.classList.add('hidden');
                 weekIn.classList.add('hidden');
                 dayIn.classList.add('hidden');
@@ -630,22 +664,25 @@
                     else dayIn.classList.remove('hidden');
                 }
                 
-                // Only trigger callback if not range (range needs apply button)
                 if(select.value !== 'range') callback();
             });
 
-            // Listeners for single inputs
             [monthIn, weekIn, dayIn].forEach(input => input.addEventListener('change', callback));
-            // Listener for range apply button
             if(applyBtn) applyBtn.addEventListener('click', callback);
         };
 
         // Initialize Filters
         setupFilterLogic('dashboard-period-type', 'dashboard-single-inputs', 'dashboard-range-inputs', 
             'dashboard-month-filter', 'dashboard-week-filter', 'dashboard-day-filter', 'dashboard-apply-range', () => refreshDashboard());
+            
+        // Dashboard Payment Type Filter
+        dashboardPaymentType.addEventListener('change', () => refreshDashboard());
 
         setupFilterLogic('history-period-type', 'history-single-inputs', 'history-range-inputs',
             'history-month-filter', 'history-week-filter', 'history-day-filter', 'history-apply-range', () => { currentHistoryPage = 1; renderHistoryList(); });
+            
+        // History Payment Type Filter
+        historyPaymentType.addEventListener('change', () => { currentHistoryPage = 1; renderHistoryList(); });
 
         setupFilterLogic('expense-history-period-type', 'expense-single-inputs', 'expense-range-inputs',
             'expense-history-month-filter', 'expense-history-week-filter', 'expense-history-day-filter', 'expense-apply-range', () => { currentExpensePage = 1; renderExpenseHistoryList(); });
@@ -720,7 +757,6 @@
 
         // --- FILTERS LOGIC ---
         
-        // Helper to get filter value based on active type
         const getFilterParams = (prefix) => {
             const type = get(`${prefix}-period-type`).value;
             let value = null;
@@ -734,7 +770,7 @@
                 value = get(`${prefix}-month-filter`).value;
             } else if (type === 'week') {
                 value = get(`${prefix}-week-filter`).value;
-            } else { // day
+            } else { 
                 value = get(`${prefix}-day-filter`).value;
             }
             return { type, value, start, end };
@@ -753,7 +789,7 @@
                 else if (item.createdAt && item.createdAt.toDate) d = item.createdAt.toDate();
                 
                 if (d) {
-                    const dateStr = d.toISOString().slice(0, 10); // YYYY-MM-DD
+                    const dateStr = d.toISOString().slice(0, 10); 
 
                     if (type === 'range') {
                         return dateStr >= start && dateStr <= end;
@@ -773,6 +809,12 @@
                 }
                 return false;
             });
+        };
+
+        // New: Filter by Payment Type
+        const filterByPaymentType = (data, paymentType) => {
+            if (!paymentType || paymentType === 'all') return data;
+            return data.filter(item => item.paymentType === paymentType);
         };
 
         // --- DATA LISTENERS ---
@@ -796,7 +838,11 @@
 
         function refreshDashboard() {
             const params = getFilterParams('dashboard');
-            const filteredTransactions = filterByPeriod(allTransactions, params);
+            const paymentType = get('dashboard-payment-type').value; // New Filter
+            
+            let filteredTransactions = filterByPeriod(allTransactions, params);
+            filteredTransactions = filterByPaymentType(filteredTransactions, paymentType); // Apply Payment Filter
+            
             const filteredExpenses = filterByPeriod(allExpenses, params);
 
             const totalIncome = filteredTransactions.reduce((s, i) => s + (i.amount || 0), 0);
@@ -1052,7 +1098,11 @@
         // --- RENDER LISTS ---
         function renderHistoryList() {
             const params = getFilterParams('history');
-            const data = filterByPeriod(allTransactions, params);
+            const paymentType = get('history-payment-type').value; // Get Payment Filter
+            
+            let data = filterByPeriod(allTransactions, params);
+            data = filterByPaymentType(data, paymentType); // Apply Payment Filter
+
             const filter = get('history-search').value;
             
             const list = get('history-list-tbody'); list.innerHTML = '';
@@ -1098,7 +1148,10 @@
         get('history-prev-btn').addEventListener('click', () => { if(currentHistoryPage > 1) { currentHistoryPage--; renderHistoryList(); }});
         get('history-next-btn').addEventListener('click', () => { 
             const params = getFilterParams('history');
-            const data = filterByPeriod(allTransactions, params);
+            const paymentType = get('history-payment-type').value;
+            let data = filterByPeriod(allTransactions, params);
+            data = filterByPaymentType(data, paymentType);
+            
             const filtered = data.filter(i => (i.playerName||'').toLowerCase().includes(get('history-search').value.toLowerCase()));
             if(currentHistoryPage < Math.ceil(filtered.length/ITEMS_PER_PAGE)) { currentHistoryPage++; renderHistoryList(); }
         });
