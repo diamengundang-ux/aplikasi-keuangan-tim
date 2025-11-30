@@ -56,7 +56,7 @@
         <!-- Sidebar -->
         <aside class="w-64 bg-gray-900 text-gray-300 flex flex-col fixed inset-y-0 left-0 z-30 transform -translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out shadow-xl" id="sidebar">
             <div class="h-16 flex items-center justify-between px-6 bg-gray-900 border-b border-gray-800">
-                <span class="text-2xl font-bold text-white tracking-tight">Tim Keuangan</span>
+                <span class="text-2xl font-bold text-white tracking-tight">TimKeuangan</span>
                 <button id="close-sidebar-btn" class="md:hidden p-1 text-gray-400 hover:text-white rounded-full focus:outline-none focus:ring-2 focus:ring-white">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
                 </button>
@@ -91,7 +91,7 @@
                 <button id="open-sidebar-btn" class="p-2 text-gray-600 hover:text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400 md:hidden">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
                 </button>
-                <span class="text-lg font-bold text-gray-800 md:hidden">Tim Keuangan</span>
+                <span class="text-lg font-bold text-gray-800 md:hidden">TimKeuangan</span>
                 <div class="w-6 md:hidden"></div> <!-- Spacer -->
                 <div class="hidden md:block text-gray-500 text-sm">Aplikasi Manajemen Keuangan Tim</div>
             </header>
@@ -107,14 +107,23 @@
                             <div class="flex flex-col sm:flex-row sm:items-center gap-4">
                                 <h1 class="text-2xl md:text-3xl font-bold text-gray-900">Dashboard</h1>
                                 
-                                <!-- Filter Bulan -->
+                                <!-- Filter Periode (Baru) -->
                                 <div class="flex items-center space-x-2 bg-white px-3 py-2 rounded-lg shadow-sm border border-gray-200 w-full sm:w-auto">
-                                    <span class="text-xs text-gray-500 uppercase font-bold whitespace-nowrap">Periode:</span>
+                                    <span class="text-xs text-gray-500 uppercase font-bold whitespace-nowrap">Filter:</span>
+                                    <!-- Selector Tipe Periode -->
+                                    <select id="dashboard-period-type" class="text-sm border-none focus:ring-0 text-gray-700 bg-transparent cursor-pointer outline-none font-medium pr-6">
+                                        <option value="month">Per Bulan</option>
+                                        <option value="week">Per Minggu</option>
+                                    </select>
+                                    <div class="w-px h-4 bg-gray-300 mx-2"></div>
+                                    <!-- Input Bulan (Default) -->
                                     <input type="month" id="dashboard-month-filter" class="text-sm border-none focus:ring-0 text-gray-700 bg-transparent cursor-pointer w-full outline-none">
+                                    <!-- Input Minggu (Hidden by default) -->
+                                    <input type="week" id="dashboard-week-filter" class="hidden text-sm border-none focus:ring-0 text-gray-700 bg-transparent cursor-pointer w-full outline-none">
                                 </div>
                             </div>
                             
-                            <!-- Action Buttons (Responsive Update) -->
+                            <!-- Action Buttons -->
                             <div class="flex flex-col sm:flex-row gap-3 w-full xl:w-auto">
                                 <button id="add-expense-btn-main" class="flex-1 sm:flex-none justify-center items-center inline-flex px-5 py-3 bg-red-600 hover:bg-red-700 text-white font-medium rounded-xl shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-all duration-200 text-sm">
                                     <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
@@ -210,12 +219,17 @@
                     <!-- ===== History View (Income) ===== -->
                     <div id="history-view" class="hidden">
                         <div class="bg-white rounded-xl shadow-sm border border-gray-100">
-                            <!-- Header History (Responsive) -->
+                            <!-- Header History -->
                             <div class="px-6 py-5 border-b border-gray-100 flex flex-col md:flex-row md:items-center justify-between gap-4">
                                 <h3 class="text-lg font-bold text-gray-800">Riwayat Pemasukan</h3>
-                                <div class="flex items-center space-x-3 w-full md:w-auto">
-                                    <span class="text-xs text-gray-500 uppercase font-bold whitespace-nowrap">Filter:</span>
-                                    <input type="month" id="history-month-filter" class="flex-1 md:flex-none text-sm border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-700 outline-none bg-white">
+                                <div class="flex items-center space-x-2 bg-white px-3 py-2 rounded-lg border border-gray-200 w-full md:w-auto">
+                                    <select id="history-period-type" class="text-sm border-none focus:ring-0 text-gray-700 bg-transparent cursor-pointer outline-none font-medium pr-6">
+                                        <option value="month">Per Bulan</option>
+                                        <option value="week">Per Minggu</option>
+                                    </select>
+                                    <div class="w-px h-4 bg-gray-300 mx-2"></div>
+                                    <input type="month" id="history-month-filter" class="text-sm border-none focus:ring-0 text-gray-700 bg-transparent cursor-pointer w-full outline-none">
+                                    <input type="week" id="history-week-filter" class="hidden text-sm border-none focus:ring-0 text-gray-700 bg-transparent cursor-pointer w-full outline-none">
                                 </div>
                             </div>
                             
@@ -248,7 +262,6 @@
                                 </table>
                             </div>
 
-                            <!-- Footer Controls (Responsive) -->
                             <div class="px-6 py-4 border-t border-gray-100 flex flex-col md:flex-row items-center justify-between gap-4 bg-gray-50/30">
                                 <div id="bulk-action-container" class="hidden flex items-center w-full md:w-auto justify-between md:justify-start space-x-4 bg-white p-2 rounded-lg border border-red-100 shadow-sm">
                                     <span id="selected-count" class="text-sm font-medium text-gray-700 px-2">0 terpilih</span>
@@ -267,11 +280,17 @@
                     <!-- ===== Expense History View ===== -->
                     <div id="expense-history-view" class="hidden">
                         <div class="bg-white rounded-xl shadow-sm border border-gray-100">
+                            <!-- Header Expense History -->
                             <div class="px-6 py-5 border-b border-gray-100 flex flex-col md:flex-row md:items-center justify-between gap-4">
                                 <h3 class="text-lg font-bold text-gray-800">Riwayat Pengeluaran</h3>
-                                <div class="flex items-center space-x-3 w-full md:w-auto">
-                                    <span class="text-xs text-gray-500 uppercase font-bold whitespace-nowrap">Filter:</span>
-                                    <input type="month" id="expense-history-month-filter" class="flex-1 md:flex-none text-sm border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-red-500 focus:border-red-500 text-gray-700 outline-none bg-white">
+                                <div class="flex items-center space-x-2 bg-white px-3 py-2 rounded-lg border border-gray-200 w-full md:w-auto">
+                                    <select id="expense-history-period-type" class="text-sm border-none focus:ring-0 text-gray-700 bg-transparent cursor-pointer outline-none font-medium pr-6">
+                                        <option value="month">Per Bulan</option>
+                                        <option value="week">Per Minggu</option>
+                                    </select>
+                                    <div class="w-px h-4 bg-gray-300 mx-2"></div>
+                                    <input type="month" id="expense-history-month-filter" class="text-sm border-none focus:ring-0 text-gray-700 bg-transparent cursor-pointer w-full outline-none">
+                                    <input type="week" id="expense-history-week-filter" class="hidden text-sm border-none focus:ring-0 text-gray-700 bg-transparent cursor-pointer w-full outline-none">
                                 </div>
                             </div>
                             
@@ -463,8 +482,16 @@
         
         // Filters
         const dashboardMonthFilter = get('dashboard-month-filter');
+        const dashboardWeekFilter = get('dashboard-week-filter');
+        const dashboardPeriodType = get('dashboard-period-type');
+
         const historyMonthFilter = get('history-month-filter');
+        const historyWeekFilter = get('history-week-filter');
+        const historyPeriodType = get('history-period-type');
+
         const expenseHistoryMonthFilter = get('expense-history-month-filter');
+        const expenseHistoryWeekFilter = get('expense-history-week-filter');
+        const expenseHistoryPeriodType = get('expense-history-period-type');
 
         // Transaction Modal
         const transactionModal = get('transaction-modal');
@@ -486,19 +513,50 @@
         // Helpers
         const formatCurrency = (val) => 'Rp ' + (val || 0).toLocaleString('id-ID');
         
-        // Set Month Inputs to Current Month
-        const setCurrentMonth = () => {
+        // Set Initial Filters
+        const setCurrentDateFilters = () => {
             const now = new Date();
-            // Format YYYY-MM sesuai timezone lokal
-            const year = now.getFullYear();
-            const month = String(now.getMonth() + 1).padStart(2, '0');
-            const monthStr = `${year}-${month}`;
-            
+            // Month
+            const monthStr = now.toISOString().slice(0, 7);
             if(dashboardMonthFilter) dashboardMonthFilter.value = monthStr;
             if(historyMonthFilter) historyMonthFilter.value = monthStr;
             if(expenseHistoryMonthFilter) expenseHistoryMonthFilter.value = monthStr;
+
+            // Week logic (ISO Week)
+            const getWeekStr = (d) => {
+                const date = new Date(d.getTime());
+                date.setHours(0, 0, 0, 0);
+                date.setDate(date.getDate() + 3 - (date.getDay() + 6) % 7);
+                const week1 = new Date(date.getFullYear(), 0, 4);
+                const weekNumber = 1 + Math.round(((date.getTime() - week1.getTime()) / 86400000 - 3 + (week1.getDay() + 6) % 7) / 7);
+                return `${date.getFullYear()}-W${String(weekNumber).padStart(2, '0')}`;
+            };
+            const weekStr = getWeekStr(now);
+            if(dashboardWeekFilter) dashboardWeekFilter.value = weekStr;
+            if(historyWeekFilter) historyWeekFilter.value = weekStr;
+            if(expenseHistoryWeekFilter) expenseHistoryWeekFilter.value = weekStr;
         };
-        setCurrentMonth();
+        setCurrentDateFilters();
+
+        // Handle Period Type Change
+        const setupPeriodToggle = (selectId, monthInputId, weekInputId, callback) => {
+            const select = get(selectId);
+            const monthIn = get(monthInputId);
+            const weekIn = get(weekInputId);
+            
+            select.addEventListener('change', () => {
+                if(select.value === 'month') {
+                    monthIn.classList.remove('hidden');
+                    weekIn.classList.add('hidden');
+                } else {
+                    monthIn.classList.add('hidden');
+                    weekIn.classList.remove('hidden');
+                }
+                callback();
+            });
+            monthIn.addEventListener('change', callback);
+            weekIn.addEventListener('change', callback);
+        };
 
         // --- AUTHENTICATION ---
         onAuthStateChanged(auth, (user) => {
@@ -567,13 +625,11 @@
         get('open-sidebar-btn').addEventListener('click', () => sidebar.classList.remove('-translate-x-full'));
         get('close-sidebar-btn').addEventListener('click', () => sidebar.classList.add('-translate-x-full'));
 
-        // --- FILTERS ---
-        dashboardMonthFilter.addEventListener('change', () => refreshDashboard());
-        historyMonthFilter.addEventListener('change', () => { currentHistoryPage = 1; renderHistoryList(); });
-        expenseHistoryMonthFilter.addEventListener('change', () => { currentExpensePage = 1; renderExpenseHistoryList(); });
-
-        const filterByMonth = (data, monthStr) => {
-            if (!monthStr) return data;
+        // --- FILTERS LOGIC ---
+        
+        // Helper untuk filter data berdasarkan periode
+        const filterByPeriod = (data, type, value) => {
+            if (!value) return data;
             return data.filter(item => {
                 let d = null;
                 if (item.date && item.date.toDate) d = item.date.toDate();
@@ -581,15 +637,28 @@
                 else if (item.createdAt && item.createdAt.toDate) d = item.createdAt.toDate();
                 
                 if (d) {
-                    // Pastikan penanganan timezone lokal aman
-                    const year = d.getFullYear();
-                    const month = String(d.getMonth() + 1).padStart(2, '0');
-                    const itemMonth = `${year}-${month}`;
-                    return itemMonth === monthStr;
+                    if (type === 'month') {
+                        // Value format: YYYY-MM
+                        return d.toISOString().slice(0, 7) === value;
+                    } else if (type === 'week') {
+                        // Value format: YYYY-Www
+                        // Hitung minggu ISO dari tanggal item
+                        const date = new Date(d.getTime());
+                        date.setHours(0, 0, 0, 0);
+                        date.setDate(date.getDate() + 3 - (date.getDay() + 6) % 7);
+                        const week1 = new Date(date.getFullYear(), 0, 4);
+                        const weekNumber = 1 + Math.round(((date.getTime() - week1.getTime()) / 86400000 - 3 + (week1.getDay() + 6) % 7) / 7);
+                        const itemWeek = `${date.getFullYear()}-W${String(weekNumber).padStart(2, '0')}`;
+                        return itemWeek === value;
+                    }
                 }
                 return false;
             });
         };
+
+        setupPeriodToggle('dashboard-period-type', 'dashboard-month-filter', 'dashboard-week-filter', () => refreshDashboard());
+        setupPeriodToggle('history-period-type', 'history-month-filter', 'history-week-filter', () => { currentHistoryPage = 1; renderHistoryList(); });
+        setupPeriodToggle('expense-history-period-type', 'expense-history-month-filter', 'expense-history-week-filter', () => { currentExpensePage = 1; renderExpenseHistoryList(); });
 
         // --- DATA LISTENERS ---
         function setupTransactionListener() {
@@ -611,9 +680,11 @@
         }
 
         function refreshDashboard() {
-            const month = dashboardMonthFilter.value;
-            const filteredTransactions = filterByMonth(allTransactions, month);
-            const filteredExpenses = filterByMonth(allExpenses, month);
+            const type = dashboardPeriodType.value;
+            const value = type === 'month' ? dashboardMonthFilter.value : dashboardWeekFilter.value;
+            
+            const filteredTransactions = filterByPeriod(allTransactions, type, value);
+            const filteredExpenses = filterByPeriod(allExpenses, type, value);
 
             const totalIncome = filteredTransactions.reduce((s, i) => s + (i.amount || 0), 0);
             const totalExpense = filteredExpenses.reduce((s, i) => s + (i.amount || 0), 0);
@@ -867,7 +938,10 @@
 
         // --- RENDER LISTS ---
         function renderHistoryList() {
-            const data = filterByMonth(allTransactions, historyMonthFilter.value);
+            const type = historyPeriodType.value;
+            const value = type === 'month' ? historyMonthFilter.value : historyWeekFilter.value;
+            const data = filterByPeriod(allTransactions, type, value);
+            
             const filter = get('history-search').value;
             
             const list = get('history-list-tbody'); list.innerHTML = '';
@@ -912,14 +986,18 @@
         get('history-search').addEventListener('input', () => { currentHistoryPage = 1; renderHistoryList(); });
         get('history-prev-btn').addEventListener('click', () => { if(currentHistoryPage > 1) { currentHistoryPage--; renderHistoryList(); }});
         get('history-next-btn').addEventListener('click', () => { 
-            const data = filterByMonth(allTransactions, historyMonthFilter.value);
+            const type = historyPeriodType.value;
+            const value = type === 'month' ? historyMonthFilter.value : historyWeekFilter.value;
+            const data = filterByPeriod(allTransactions, type, value);
             const filtered = data.filter(i => (i.playerName||'').toLowerCase().includes(get('history-search').value.toLowerCase()));
             if(currentHistoryPage < Math.ceil(filtered.length/ITEMS_PER_PAGE)) { currentHistoryPage++; renderHistoryList(); }
         });
 
         // --- RENDER EXPENSE LIST ---
         function renderExpenseHistoryList() {
-            const data = filterByMonth(allExpenses, expenseHistoryMonthFilter.value);
+            const type = expenseHistoryPeriodType.value;
+            const value = type === 'month' ? expenseHistoryMonthFilter.value : expenseHistoryWeekFilter.value;
+            const data = filterByPeriod(allExpenses, type, value);
             const filter = get('expense-history-search').value;
             
             const list = get('expense-history-list-tbody'); list.innerHTML = '';
@@ -962,7 +1040,9 @@
         get('expense-history-search').addEventListener('input', () => { currentExpensePage = 1; renderExpenseHistoryList(); });
         get('expense-history-prev-btn').addEventListener('click', () => { if(currentExpensePage > 1) { currentExpensePage--; renderExpenseHistoryList(); }});
         get('expense-history-next-btn').addEventListener('click', () => { 
-            const data = filterByMonth(allExpenses, expenseHistoryMonthFilter.value);
+            const type = expenseHistoryPeriodType.value;
+            const value = type === 'month' ? expenseHistoryMonthFilter.value : expenseHistoryWeekFilter.value;
+            const data = filterByPeriod(allExpenses, type, value);
             const filtered = data.filter(i => (i.description||'').toLowerCase().includes(get('expense-history-search').value.toLowerCase()));
             if(currentExpensePage < Math.ceil(filtered.length/ITEMS_PER_PAGE)) { currentExpensePage++; renderExpenseHistoryList(); }
         });
