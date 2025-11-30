@@ -234,7 +234,6 @@
                                                 <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Tanggal</th>
                                                 <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Nama</th>
                                                 <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Nominal</th>
-                                                <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Jenis</th>
                                                 <th class="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Ket</th>
                                             </tr>
                                         </thead>
@@ -646,6 +645,10 @@
             const weekIn = get(weekId);
             const dayIn = get(dayId);
             const applyBtn = get(applyId);
+            
+            // Initial Setup (Inputs & Callback)
+            const startIn = get(selectId.replace('period-type', 'start-date'));
+            const endIn = get(selectId.replace('period-type', 'end-date'));
 
             select.addEventListener('change', () => {
                 monthIn.classList.add('hidden');
@@ -668,6 +671,14 @@
             });
 
             [monthIn, weekIn, dayIn].forEach(input => input.addEventListener('change', callback));
+            
+            // Range Inputs Change Listener
+            if (startIn && endIn) {
+                [startIn, endIn].forEach(input => input.addEventListener('change', () => {
+                    if (startIn.value && endIn.value) callback();
+                }));
+            }
+
             if(applyBtn) applyBtn.addEventListener('click', callback);
         };
 
@@ -776,6 +787,14 @@
             return { type, value, start, end };
         };
 
+        // Helper function to get local date string (YYYY-MM-DD) correctly
+        const getLocalDateStr = (d) => {
+            const year = d.getFullYear();
+            const month = String(d.getMonth() + 1).padStart(2, '0');
+            const day = String(d.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        };
+
         const filterByPeriod = (data, params) => {
             const { type, value, start, end } = params;
             
@@ -789,14 +808,16 @@
                 else if (item.createdAt && item.createdAt.toDate) d = item.createdAt.toDate();
                 
                 if (d) {
-                    const dateStr = d.toISOString().slice(0, 10); 
+                    // Use local time construction
+                    const dateStr = getLocalDateStr(d);
 
                     if (type === 'range') {
                         return dateStr >= start && dateStr <= end;
                     } else if (type === 'day') {
                         return dateStr === value;
                     } else if (type === 'month') {
-                        return d.toISOString().slice(0, 7) === value;
+                        // slice local string YYYY-MM
+                        return dateStr.slice(0, 7) === value;
                     } else if (type === 'week') {
                         const date = new Date(d.getTime());
                         date.setHours(0, 0, 0, 0);
@@ -883,8 +904,9 @@
                     else if (item.createdAt && item.createdAt.toDate) d = item.createdAt.toDate();
                     
                     if (d) {
+                        // Use local time components for key
                         const key = new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime();
-                        if (!rawMap[key]) rawMap[key] = { income: 0, expense: 0, dateObj: d };
+                        if (!rawMap[key]) rawMap[key] = { income: 0, expense: 0, dateObj: new Date(d.getFullYear(), d.getMonth(), d.getDate()) };
                         rawMap[key][type] += (item.amount || 0);
                     }
                 });
@@ -892,7 +914,9 @@
             processData(transactions, 'income');
             processData(expenses, 'expense');
 
-            const sortedKeys = Object.keys(rawMap).sort();
+            // Sort by numeric key (timestamp)
+            const sortedKeys = Object.keys(rawMap).sort((a, b) => a - b);
+            
             const labels = sortedKeys.map(k => rawMap[k].dateObj.toLocaleDateString('id-ID', { day: 'numeric', month: 'short' }));
             const incomeData = sortedKeys.map(k => rawMap[k].income);
             const expenseData = sortedKeys.map(k => rawMap[k].expense);
