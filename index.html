@@ -114,12 +114,15 @@
                                     <select id="dashboard-period-type" class="text-sm border-none focus:ring-0 text-gray-700 bg-transparent cursor-pointer outline-none font-medium pr-6">
                                         <option value="month">Per Bulan</option>
                                         <option value="week">Per Minggu</option>
+                                        <option value="day">Per Hari</option> <!-- Opsi Baru -->
                                     </select>
                                     <div class="w-px h-4 bg-gray-300 mx-2"></div>
                                     <!-- Input Bulan (Default) -->
                                     <input type="month" id="dashboard-month-filter" class="text-sm border-none focus:ring-0 text-gray-700 bg-transparent cursor-pointer w-full outline-none">
                                     <!-- Input Minggu (Hidden by default) -->
                                     <input type="week" id="dashboard-week-filter" class="hidden text-sm border-none focus:ring-0 text-gray-700 bg-transparent cursor-pointer w-full outline-none">
+                                    <!-- Input Hari (Hidden by default) -->
+                                    <input type="date" id="dashboard-day-filter" class="hidden text-sm border-none focus:ring-0 text-gray-700 bg-transparent cursor-pointer w-full outline-none">
                                 </div>
                             </div>
                             
@@ -226,10 +229,12 @@
                                     <select id="history-period-type" class="text-sm border-none focus:ring-0 text-gray-700 bg-transparent cursor-pointer outline-none font-medium pr-6">
                                         <option value="month">Per Bulan</option>
                                         <option value="week">Per Minggu</option>
+                                        <option value="day">Per Hari</option>
                                     </select>
                                     <div class="w-px h-4 bg-gray-300 mx-2"></div>
                                     <input type="month" id="history-month-filter" class="text-sm border-none focus:ring-0 text-gray-700 bg-transparent cursor-pointer w-full outline-none">
                                     <input type="week" id="history-week-filter" class="hidden text-sm border-none focus:ring-0 text-gray-700 bg-transparent cursor-pointer w-full outline-none">
+                                    <input type="date" id="history-day-filter" class="hidden text-sm border-none focus:ring-0 text-gray-700 bg-transparent cursor-pointer w-full outline-none">
                                 </div>
                             </div>
                             
@@ -287,10 +292,12 @@
                                     <select id="expense-history-period-type" class="text-sm border-none focus:ring-0 text-gray-700 bg-transparent cursor-pointer outline-none font-medium pr-6">
                                         <option value="month">Per Bulan</option>
                                         <option value="week">Per Minggu</option>
+                                        <option value="day">Per Hari</option>
                                     </select>
                                     <div class="w-px h-4 bg-gray-300 mx-2"></div>
                                     <input type="month" id="expense-history-month-filter" class="text-sm border-none focus:ring-0 text-gray-700 bg-transparent cursor-pointer w-full outline-none">
                                     <input type="week" id="expense-history-week-filter" class="hidden text-sm border-none focus:ring-0 text-gray-700 bg-transparent cursor-pointer w-full outline-none">
+                                    <input type="date" id="expense-history-day-filter" class="hidden text-sm border-none focus:ring-0 text-gray-700 bg-transparent cursor-pointer w-full outline-none">
                                 </div>
                             </div>
                             
@@ -483,14 +490,17 @@
         // Filters
         const dashboardMonthFilter = get('dashboard-month-filter');
         const dashboardWeekFilter = get('dashboard-week-filter');
+        const dashboardDayFilter = get('dashboard-day-filter');
         const dashboardPeriodType = get('dashboard-period-type');
 
         const historyMonthFilter = get('history-month-filter');
         const historyWeekFilter = get('history-week-filter');
+        const historyDayFilter = get('history-day-filter');
         const historyPeriodType = get('history-period-type');
 
         const expenseHistoryMonthFilter = get('expense-history-month-filter');
         const expenseHistoryWeekFilter = get('expense-history-week-filter');
+        const expenseHistoryDayFilter = get('expense-history-day-filter');
         const expenseHistoryPeriodType = get('expense-history-period-type');
 
         // Transaction Modal
@@ -535,27 +545,39 @@
             if(dashboardWeekFilter) dashboardWeekFilter.value = weekStr;
             if(historyWeekFilter) historyWeekFilter.value = weekStr;
             if(expenseHistoryWeekFilter) expenseHistoryWeekFilter.value = weekStr;
+
+            // Day
+            const dayStr = now.toISOString().slice(0, 10);
+            if(dashboardDayFilter) dashboardDayFilter.value = dayStr;
+            if(historyDayFilter) historyDayFilter.value = dayStr;
+            if(expenseHistoryDayFilter) expenseHistoryDayFilter.value = dayStr;
         };
         setCurrentDateFilters();
 
         // Handle Period Type Change
-        const setupPeriodToggle = (selectId, monthInputId, weekInputId, callback) => {
+        const setupPeriodToggle = (selectId, monthInputId, weekInputId, dayInputId, callback) => {
             const select = get(selectId);
             const monthIn = get(monthInputId);
             const weekIn = get(weekInputId);
+            const dayIn = get(dayInputId);
             
             select.addEventListener('change', () => {
+                monthIn.classList.add('hidden');
+                weekIn.classList.add('hidden');
+                dayIn.classList.add('hidden');
+
                 if(select.value === 'month') {
                     monthIn.classList.remove('hidden');
-                    weekIn.classList.add('hidden');
-                } else {
-                    monthIn.classList.add('hidden');
+                } else if (select.value === 'week') {
                     weekIn.classList.remove('hidden');
+                } else {
+                    dayIn.classList.remove('hidden');
                 }
                 callback();
             });
             monthIn.addEventListener('change', callback);
             weekIn.addEventListener('change', callback);
+            dayIn.addEventListener('change', callback);
         };
 
         // --- AUTHENTICATION ---
@@ -638,11 +660,8 @@
                 
                 if (d) {
                     if (type === 'month') {
-                        // Value format: YYYY-MM
                         return d.toISOString().slice(0, 7) === value;
                     } else if (type === 'week') {
-                        // Value format: YYYY-Www
-                        // Hitung minggu ISO dari tanggal item
                         const date = new Date(d.getTime());
                         date.setHours(0, 0, 0, 0);
                         date.setDate(date.getDate() + 3 - (date.getDay() + 6) % 7);
@@ -650,15 +669,17 @@
                         const weekNumber = 1 + Math.round(((date.getTime() - week1.getTime()) / 86400000 - 3 + (week1.getDay() + 6) % 7) / 7);
                         const itemWeek = `${date.getFullYear()}-W${String(weekNumber).padStart(2, '0')}`;
                         return itemWeek === value;
+                    } else if (type === 'day') {
+                        return d.toISOString().slice(0, 10) === value;
                     }
                 }
                 return false;
             });
         };
 
-        setupPeriodToggle('dashboard-period-type', 'dashboard-month-filter', 'dashboard-week-filter', () => refreshDashboard());
-        setupPeriodToggle('history-period-type', 'history-month-filter', 'history-week-filter', () => { currentHistoryPage = 1; renderHistoryList(); });
-        setupPeriodToggle('expense-history-period-type', 'expense-history-month-filter', 'expense-history-week-filter', () => { currentExpensePage = 1; renderExpenseHistoryList(); });
+        setupPeriodToggle('dashboard-period-type', 'dashboard-month-filter', 'dashboard-week-filter', 'dashboard-day-filter', () => refreshDashboard());
+        setupPeriodToggle('history-period-type', 'history-month-filter', 'history-week-filter', 'history-day-filter', () => { currentHistoryPage = 1; renderHistoryList(); });
+        setupPeriodToggle('expense-history-period-type', 'expense-history-month-filter', 'expense-history-week-filter', 'expense-history-day-filter', () => { currentExpensePage = 1; renderExpenseHistoryList(); });
 
         // --- DATA LISTENERS ---
         function setupTransactionListener() {
@@ -681,7 +702,10 @@
 
         function refreshDashboard() {
             const type = dashboardPeriodType.value;
-            const value = type === 'month' ? dashboardMonthFilter.value : dashboardWeekFilter.value;
+            let value = '';
+            if (type === 'month') value = dashboardMonthFilter.value;
+            else if (type === 'week') value = dashboardWeekFilter.value;
+            else value = dashboardDayFilter.value;
             
             const filteredTransactions = filterByPeriod(allTransactions, type, value);
             const filteredExpenses = filterByPeriod(allExpenses, type, value);
@@ -939,7 +963,11 @@
         // --- RENDER LISTS ---
         function renderHistoryList() {
             const type = historyPeriodType.value;
-            const value = type === 'month' ? historyMonthFilter.value : historyWeekFilter.value;
+            let value = '';
+            if (type === 'month') value = historyMonthFilter.value;
+            else if (type === 'week') value = historyWeekFilter.value;
+            else value = historyDayFilter.value;
+
             const data = filterByPeriod(allTransactions, type, value);
             
             const filter = get('history-search').value;
@@ -987,7 +1015,11 @@
         get('history-prev-btn').addEventListener('click', () => { if(currentHistoryPage > 1) { currentHistoryPage--; renderHistoryList(); }});
         get('history-next-btn').addEventListener('click', () => { 
             const type = historyPeriodType.value;
-            const value = type === 'month' ? historyMonthFilter.value : historyWeekFilter.value;
+            let value = '';
+            if (type === 'month') value = historyMonthFilter.value;
+            else if (type === 'week') value = historyWeekFilter.value;
+            else value = historyDayFilter.value;
+
             const data = filterByPeriod(allTransactions, type, value);
             const filtered = data.filter(i => (i.playerName||'').toLowerCase().includes(get('history-search').value.toLowerCase()));
             if(currentHistoryPage < Math.ceil(filtered.length/ITEMS_PER_PAGE)) { currentHistoryPage++; renderHistoryList(); }
@@ -996,7 +1028,11 @@
         // --- RENDER EXPENSE LIST ---
         function renderExpenseHistoryList() {
             const type = expenseHistoryPeriodType.value;
-            const value = type === 'month' ? expenseHistoryMonthFilter.value : expenseHistoryWeekFilter.value;
+            let value = '';
+            if (type === 'month') value = expenseHistoryMonthFilter.value;
+            else if (type === 'week') value = expenseHistoryWeekFilter.value;
+            else value = expenseHistoryDayFilter.value;
+
             const data = filterByPeriod(allExpenses, type, value);
             const filter = get('expense-history-search').value;
             
@@ -1041,7 +1077,11 @@
         get('expense-history-prev-btn').addEventListener('click', () => { if(currentExpensePage > 1) { currentExpensePage--; renderExpenseHistoryList(); }});
         get('expense-history-next-btn').addEventListener('click', () => { 
             const type = expenseHistoryPeriodType.value;
-            const value = type === 'month' ? expenseHistoryMonthFilter.value : expenseHistoryWeekFilter.value;
+            let value = '';
+            if (type === 'month') value = expenseHistoryMonthFilter.value;
+            else if (type === 'week') value = expenseHistoryWeekFilter.value;
+            else value = expenseHistoryDayFilter.value;
+
             const data = filterByPeriod(allExpenses, type, value);
             const filtered = data.filter(i => (i.description||'').toLowerCase().includes(get('expense-history-search').value.toLowerCase()));
             if(currentExpensePage < Math.ceil(filtered.length/ITEMS_PER_PAGE)) { currentExpensePage++; renderExpenseHistoryList(); }
